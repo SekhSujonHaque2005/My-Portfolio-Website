@@ -1,0 +1,1553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sekh Sujon Haque - Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;700&family=Roboto:wght@300;400;700&family=Noto+Sans:wght@300;400;700&family=Noto+Sans+Devanagari:wght@300;400;700&family=Noto+Sans+Bengali:wght@300;400;700&family=Noto+Sans+Tamil:wght@300;400;700&family=Noto+Sans+Telugu:wght@300;400;700&family=Noto+Sans+Malayalam:wght@300;400;700&family=Noto+Sans+Gurmukhi:wght@300;400;700&family=Noto+Sans+Assamese:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans', 'Noto Sans Devanagari', 'Noto Sans Bengali', 'Noto Sans Tamil', 'Noto Sans Telugu', 'Noto Sans Malayalam', 'Noto Sans Gurmukhi', 'Noto Sans Assamese', 'Roboto', sans-serif;
+            /* @apply bg-black text-white; */
+            overflow-x: hidden;
+        }
+        .smooth-scroll {
+            scroll-behavior: smooth;
+        }
+        .cosmic-glow {
+            box-shadow: 0 0 40px rgba(34, 211, 238, 0.9), 0 0 80px rgba(34, 211, 238, 0.7);
+            transition: box-shadow 0.6s ease, transform 0.6s ease;
+        }
+        .cosmic-glow:hover {
+            box-shadow: 0 0 80px rgba(34, 211, 238, 1), 0 0 160px rgba(34, 211, 238, 0.8);
+            transform: translateY(-20px);
+        }
+        .nav-glow {
+            transition: all 0.4s ease;
+            position: relative;
+            padding: 0.5rem 1.5rem;
+        }
+        .nav-glow:hover {
+            text-shadow: 0 0 25px rgba(34, 211, 238, 1);
+            transform: translateY(-3px);
+        }
+        .nav-glow.active {
+            color: #22D3EE;
+            text-shadow: 0 0 15px rgba(34, 211, 238, 0.9);
+        }
+        .nav-glow.active::after {
+            width: 100%;
+        }
+        .nav-glow::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(to right, rgba(34, 211, 238, 0), rgba(34, 211, 238, 1));
+            transition: width 0.4s ease;
+        }
+        .nav-glow:hover::after {
+            width: 100%;
+        }
+        .nav-3d {
+            transition: transform 0.5s ease;
+            transform-style: preserve-3d;
+        }
+        .nav-3d:hover {
+            transform: perspective(1200px) rotateX(12deg) scale(1.15);
+        }
+        .nav-shrink {
+            transition: all 0.3s ease;
+        }
+        .nav-shrink.scrolled {
+            height: 4rem;
+            background: rgba(0, 0, 0, 0.95);
+            box-shadow: 0 4px 20px rgba(34, 211, 238, 0.5);
+        }
+        .nav-shrink.scrolled h1 {
+            font-size: 2rem;
+        }
+        .nav-shrink.scrolled .nav-glow {
+            padding: 0.3rem 1rem;
+        }
+        .parallax-bg {
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        .parallax-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.95));
+        }
+        .fade-in {
+            opacity: 0;
+            transform: translateY(150px);
+            transition: opacity 2.5s ease, transform 2.5s ease;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .card-3d {
+            transition: transform 1s ease, opacity 1s ease, box-shadow 0.6s ease;
+            transform-style: preserve-3d;
+            opacity: 0.9;
+        }
+        .card-3d:hover {
+            transform: perspective(3500px) rotateX(20deg) rotateY(20deg) scale(1.3);
+            opacity: 1;
+            box-shadow: 0 0 100px rgba(34, 211, 238, 1), 0 0 200px rgba(34, 211, 238, 0.8);
+        }
+        .hero-bg {
+            position: relative;
+            overflow: hidden;
+        }
+        #three-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+        .gradient-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(8, 145, 178, 0.85) 0%, rgba(34, 211, 238, 0.85) 100%);
+            z-index: 0;
+        }
+        .project-img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            transition: transform 0.5s ease, box-shadow 0.5s ease;
+        }
+        .project-img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(34, 211, 238, 0.7);
+        }
+        .form-input {
+            transition: all 0.3s ease;
+            border: 2px solid rgba(34, 211, 238, 0.5);
+            background: rgba(0, 0, 0, 0.7);
+        }
+        .form-input:focus {
+            border-color: #22D3EE;
+            box-shadow: 0 0 15px rgba(34, 211, 238, 0.7);
+        }
+        .language-switcher {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid rgba(34, 211, 238, 0.5);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        .language-switcher:focus {
+            border-color: #22D3EE;
+            box-shadow: 0 0 15px rgba(34, 211, 238, 0.7);
+            outline: none;
+        }
+        .language-switcher:hover {
+            background: rgba(34, 211, 238, 0.2);
+        }
+        .projects-grid {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+        @keyframes cosmic-pulse {
+            0% { box-shadow: 0 0 40px rgba(34, 211, 238, 0.9); }
+            50% { box-shadow: 0 0 100px rgba(34, 211, 238, 1); }
+            100% { box-shadow: 0 0 40px rgba(34, 211, 238, 0.9); }
+        }
+        @keyframes text-glow {
+            0% { text-shadow: 0 0 25px rgba(34, 211, 238, 0.7); }
+            50% { text-shadow: 0 0 50px rgba(34, 211, 238, 1); }
+            100% { text-shadow: 0 0 25px rgba(34, 211, 238, 0.7); }
+        }
+        @keyframes bg-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .hover-sound {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="smooth-scroll">
+    <!-- Navigation -->
+    <nav class="cosmic-glow bg-black/90 backdrop-blur-3xl fixed w-full top-0 z-50 border-b border-cyan-500/20 nav-shrink">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex items-center">
+                    <h1 class="text-4xl font-bold text-cyan-400 font-exo transition-all duration-300" style="animation: text-glow 3s infinite;" data-i18n="nav.title">Sekh Sujon Haque</h1>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#home" class="text-gray-100 hover:text-cyan-400 font-medium nav-glow nav-3d font-exo hover-sound" data-i18n="nav.home">Home</a>
+                    <a href="#about" class="text-gray-100 hover:text-cyan-400 font-medium nav-glow nav-3d font-exo hover-sound" data-i18n="nav.about">About</a>
+                    <a href="#projects" class="text-gray-100 hover:text-cyan-400 font-medium nav-glow nav-3d font-exo hover-sound" data-i18n="nav.projects">Projects</a>
+                    <a href="#skills" class="text-gray-100 hover:text-cyan-400 font-medium nav-glow nav-3d font-exo hover-sound" data-i18n="nav.skills">Skills</a>
+                    <a href="#contact" class="text-gray-100 hover:text-cyan-400 font-medium nav-glow nav-3d font-exo hover-sound" data-i18n="nav.contact">Contact</a>
+                    <select id="language-switcher" class="cosmic-glow form-input language-switcher font-exo hover-sound">
+                        <option value="en">English</option>
+                        <option value="hi">हिन्दी</option>
+                        <option value="bn">বাংলা</option>
+                        <option value="ta">தமிழ்</option>
+                        <option value="te">తెలుగు</option>
+                        <option value="ml">മലയാളം</option>
+                        <option value="bho">भोजपुरी</option>
+                        <option value="as">অসমীয়া</option>
+                        <option value="mr">मराठी</option>
+                        <option value="pa">ਪੰਜਾਬੀ</option>
+                    </select>
+                </div>
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-cyan-400 focus:outline-none hover-sound">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-black/90 backdrop-blur-3xl cosmic-glow border-t border-cyan-500/20">
+            <div class="px-6 py-6 space-y-4">
+                <a href="#home" class="block text-gray-100 hover:text-cyan-400 font-medium nav-glow nav-3d font-exo text-lg hover-sound" data-i18n="nav.home">Home</a>
+                <a href="#about" class="block text-gray-100 hover:text-cyan-400 font-medium nav-glow nav-3d font-exo text-lg hover-sound" data-i18n="nav.about">About</a>
+                <a href="#projects" class="block text-gray-100 hover:text-cyan-400 font-medium nav-glow nav-3d font-exo text-lg hover-sound" data-i18n="nav.projects">Projects</a>
+                <a href="#skills" class="block text-gray-100 hover:text-cyan-400 font-medium nav-glow nav-3d font-exo text-lg hover-sound" data-i18n="nav.skills">Skills</a>
+                <a href="#contact" class="block text-gray-100 hover:text-cyan-400 font-medium nav-glow nav-3d font-exo text-lg hover-sound" data-i18n="nav.contact">Contact</a>
+                <select id="language-switcher-mobile" class="cosmic-glow form-input language-switcher font-exo hover-sound w-full">
+                    <option value="en">English</option>
+                    <option value="hi">हिन्दी</option>
+                    <option value="bn">বাংলা</option>
+                    <option value="ta">தமிழ்</option>
+                    <option value="te">తెలుగు</option>
+                    <option value="ml">മലയാളം</option>
+                    <option value="bho">भोजपुरी</option>
+                    <option value="as">অসমীয়া</option>
+                    <option value="mr">मराठी</option>
+                    <option value="pa">ਪੰਜਾਬੀ</option>
+                </select>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center justify-center hero-bg">
+        <canvas id="three-canvas"></canvas>
+        <div class="gradient-overlay"></div>
+        <div class="hero-content text-center max-w-5xl mx-auto px-4 fade-in">
+            <h2 class="text-6xl md:text-9xl font-bold mb-8 font-exo" style="animation: text-glow 3s infinite;" data-i18n="home.title">Hi, I'm Sekh Sujon Haque</h2>
+            <p class="text-2xl md:text-4xl mb-10 font-light" data-i18n="home.subtitle">A cosmic AI/ML Engineer crafting interstellar solutions for the future.</p>
+            <a href="#contact" class="cosmic-glow bg-cyan-500/30 text-white px-14 py-6 rounded-full font-medium hover:bg-cyan-500/50 transition card-3d font-exo hover-sound" style="animation: cosmic-pulse 2s infinite;" data-i18n="home.connect">Let's Connect</a>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-48 bg-black parallax-bg" style="background-image: url('https://via.placeholder.com/1920x1080?text=Cosmic+Nebula'); background-size: 200%; animation: bg-shift 40s infinite;">
+        <div class="parallax-overlay"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+            <h2 class="text-6xl font-bold text-center mb-16 text-white font-exo" style="animation: text-glow 3s infinite;" data-i18n="about.title">About Me</h2>
+            <div class="flex flex-col md:flex-row items-center gap-20 fade-in">
+                <div class="md:w-1/3">
+                    <img src="My Photo.jpeg" alt="Profile Picture of Sujon" class="rounded-full w-96 h-96 mx-auto object-cover cosmic-glow card-3d hover-sound">
+                </div>
+                <div class="md:w-2/3">
+                    <p class="text-2xl text-gray-100 leading-relaxed" data-i18n="about.bio1">
+                        I'm an aspiring <strong>AI/ML Engineer</strong> with hands-on experience in building intelligent systems that merge hardware and software—like my recent AI-powered agricultural robot. My expertise lies in Python, ML, Arduino-IoT, and Firebase, and I'm driven by the goal of making tech accessible, sustainable, and impactful.
+                    </p>
+                    <p class="text-2xl text-gray-100 leading-relaxed mt-6" data-i18n="about.bio2">
+                        I'm currently pursuing a <strong>B.Tech in Computer Science Engineering</strong> from <strong>Lovely Professional University</strong>. I’ve led multiple innovation-driven projects, participated in university hackathons, and continue to grow my knowledge in the space of Data Science and Artificial Intelligence. Explore my work or connect with me on LinkedIn!
+                    </p>
+                    <a href="https://www.linkedin.com/in/sekh-sujon-haque-/" target="_blank" class="inline-block mt-8 cosmic-glow bg-cyan-500/30 text-white px-14 py-6 rounded-full font-medium hover:bg-cyan-500/50 transition card-3d font-exo hover-sound" data-i18n="about.linkedin">View LinkedIn</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-48 bg-black overflow-x-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-6xl font-bold text-center mb-16 text-white font-exo" style="animation: text-glow 3s infinite;" data-i18n="projects.title">My Projects</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-16 projects-grid">
+                <!-- Project 1: AI-Powered Agricultural Robot -->
+                <div class="cosmic-glow bg-black/80 p-8 rounded-xl card-3d fade-in hover-sound min-w-[300px] min-h-[450px]">
+                    <img src="Picture1.jpg" alt="AI-Powered Agricultural Robot" class="project-img">
+                    <h3 class="text-4xl font-semibold mb-6 text-white font-exo" data-i18n="projects.list[0].title">AI-Powered Agricultural Robot</h3>
+                    <p class="text-gray-100 mb-6" data-i18n="projects.list[0].description">An automated robot that detects plant diseases using AI, monitors environmental data, and sprays pesticides as needed for sustainable farming.</p>
+                    <a href="https://github.com/SekhSujonHaque2005/AI-Powered-Agricultural-Robot" target="_blank" class="text-cyan-400 hover:text-cyan-300 font-medium font-exo hover-sound" data-i18n="projects.list[5].link">View Documentation →</a>
+                </div>
+                <!-- Project 2: Voice + Obstacle Avoiding Robot -->
+                <div class="cosmic-glow bg-black/80 p-8 rounded-xl card-3d fade-in hover-sound min-w-[300px] min-h-[450px]">
+                    <img src="Arduino Image 1.jpg" alt="Voice + Obstacle Avoiding Robot" class="project-img">
+                    <h3 class="text-4xl font-semibold mb-6 text-white font-exo" data-i18n="projects.list[1].title">Voice + Obstacle Avoiding Robot</h3>
+                    <p class="text-gray-100 mb-6" data-i18n="projects.list[1].description">A voice-controlled robot that can navigate around obstacles autonomously using sensor inputs and speech commands.</p>
+                    <a href="https://github.com/SekhSujonHaque2005/Voice-Obstacle-Avoiding-Robot" target="_blank" class="text-cyan-400 hover:text-cyan-300 font-medium font-exo hover-sound" data-i18n="projects.list[5].link">View Documentation →</a>
+                </div>
+                <!-- Project 3: Attendance Management System -->
+                <div class="cosmic-glow bg-black/80 p-8 rounded-xl card-3d fade-in hover-sound min-w-[300px] min-h-[450px]">
+                    <img src="Attendence Management System.png" alt="Attendance Management System" class="project-img">
+                    <h3 class="text-4xl font-semibold mb-6 text-white font-exo" data-i18n="projects.list[2].title">Attendance Management System</h3>
+                    <p class="text-gray-100 mb-6" data-i18n="projects.list[2].description">A system to efficiently track and manage attendance records for educational institutions with easy reporting features.</p>
+                    <a href="https://github.com/SekhSujonHaque2005/Smart-Attendence-Managemant-System-Basic-Face-Recognisation-or-QR-Code-/tree/main" target="_blank" class="text-cyan-400 hover:text-cyan-300 font-medium font-exo hover-sound" data-i18n="projects.list[2].link">View Project →</a>
+                </div>
+                <!-- Project 4: Environmental Awareness AI Tool -->
+                <div class="cosmic-glow bg-black/80 p-8 rounded-xl card-3d fade-in hover-sound min-w-[300px] min-h-[450px]">
+                    <img src="EVS.png" alt="Environmental Awareness AI Tool" class="project-img">
+                    <h3 class="text-4xl font-semibold mb-6 text-white font-exo" data-i18n="projects.list[3].title">Environmental Awareness AI Tool</h3>
+                    <p class="text-gray-100 mb-6" data-i18n="projects.list[3].description">An AI-driven tool that educates users about pollution impacts on pollinators and suggests actionable environmental protection tips.</p>
+                    <a href="https://youtu.be/VPZ8yukaH88" target="_blank" class="text-cyan-400 hover:text-cyan-300 font-medium font-exo hover-sound" data-i18n="projects.list[3].link">View Project →</a>
+                </div>
+                <!-- Project 5: AI Career Guidance Platform -->
+                <div class="cosmic-glow bg-black/80 p-8 rounded-xl card-3d fade-in hover-sound min-w-[300px] min-h-[450px]">
+                    <img src="Carrer Guidence.png" alt="AI Career Guidance Platform" class="project-img">
+                    <h3 class="text-4xl font-semibold mb-6 text-white font-exo" data-i18n="projects.list[4].title">AI Career Guidance Platform</h3>
+                    <p class="text-gray-100 mb-6" data-i18n="projects.list[4].description">A web app leveraging AI to recommend personalized career paths based on user skills, preferences, and market trends.</p>
+                    <a href="https://github.com/your-career-guidance-repo" target="_blank" class="text-cyan-400 hover:text-cyan-300 font-medium font-exo hover-sound" data-i18n="projects.list[4].link">View Project →</a>
+                </div>
+                <!-- Project 6: Virtual Assistant – Tom -->
+                <div class="cosmic-glow bg-black/80 p-8 rounded-xl card-3d fade-in hover-sound min-w-[300px] min-h-[450px]">
+                    <img src="Virtual Asistant.png" alt="Virtual Assistant – Tom" class="project-img">
+                    <h3 class="text-4xl font-semibold mb-6 text-white font-exo" data-i18n="projects.list[5].title">Virtual Assistant – Tom</h3>
+                    <p class="text-gray-100 mb-6" data-i18n="projects.list[5].description">“Tom” is a browser-based virtual assistant built with HTML, CSS, and JavaScript. It responds to voice commands and performs basic web tasks using the Web Speech API.</p>
+                    <a href="https://github.com/SekhSujonHaque2005/Virtual-Asistant" target="_blank" class="text-cyan-400 hover:text-cyan-300 font-medium font-exo hover-sound" data-i18n="projects.list[5].link">View Project →</a>
+                </div>
+                <!-- Project 7: AI-Powered Mood Tracker -->
+                <div class="cosmic-glow bg-black/80 p-8 rounded-xl card-3d fade-in hover-sound min-w-[300px] min-h-[450px]">
+                    <img src="Mood Tracker .png" alt="AI-Powered Mood Tracker" class="project-img">
+                    <h3 class="text-4xl font-semibold mb-6 text-white font-exo" data-i18n="projects.list[6].title">AI-Powered Mood Tracker</h3>
+                    <p class="text-gray-100 mb-6" data-i18n="projects.list[6].description">A smart mood tracking web app that uses AI to analyze user inputs, detect emotional tone, and provide personalized feedback and motivational quotes.</p>
+                    <a href="https://github.com/your-mood-tracker-repo" target="_blank" class="text-cyan-400 hover:text-cyan-300 font-medium font-exo hover-sound" data-i18n="projects.list[6].link">View Project →</a>
+                </div>
+                <!-- Project 8: AI Chatbot -->
+                <div class="cosmic-glow bg-black/80 p-8 rounded-xl card-3d fade-in hover-sound min-w-[300px] min-h-[450px]">
+                    <img src="Chatbot.png" alt="AI Chatbot" class="project-img">
+                    <h3 class="text-4xl font-semibold mb-6 text-white font-exo" data-i18n="projects.list[7].title">AI Chatbot</h3>
+                    <p class="text-gray-100 mb-6" data-i18n="projects.list[7].description">An intelligent chatbot built with JavaScript and integrated AI APIs to provide meaningful responses and assist with FAQs or conversations.</p>
+                    <a href="https://studio--groqchat-j88xa.us-central1.hosted.app/" target="_blank" class="text-cyan-400 hover:text-cyan-300 font-medium font-exo hover-sound" data-i18n="projects.list[7].link">View Project →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="py-48 bg-black parallax-bg" style="background-image: url('https://via.placeholder.com/1920x1080?text=Starfield+Grid'); background-size: 200%; animation: bg-shift 40s infinite;">
+        <div class="parallax-overlay"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+            <h2 class="text-6xl font-bold text-center mb-16 text-white font-exo" style="animation: text-glow 3s infinite;" data-i18n="skills.title">Skills</h2>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-10 fade-in">
+                <div class="cosmic-glow bg-cyan-500/30 p-6 text-center text-white font-medium rounded-lg hover:bg-cyan-500/50 transition font-exo hover-sound" data-i18n="skills.list[0]">Python</div>
+                <div class="cosmic-glow bg-cyan-500/30 p-6 text-center text-white font-medium rounded-lg hover:bg-cyan-500/50 transition font-exo hover-sound" data-i18n="skills.list[1]">C Programming</div>
+                <div class="cosmic-glow bg-cyan-500/30 p-6 text-center text-white font-medium rounded-lg hover:bg-cyan-500/50 transition font-exo hover-sound" data-i18n="skills.list[2]">HTML/CSS</div>
+                <div class="cosmic-glow bg-cyan-500/30 p-6 text-center text-white font-medium rounded-lg hover:bg-cyan-500/50 transition font-exo hover-sound" data-i18n="skills.list[3]">JavaScript</div>
+                <div class="cosmic-glow bg-cyan-500/30 p-6 text-center text-white font-medium rounded-lg hover:bg-cyan-500/50 transition font-exo hover-sound" data-i18n="skills.list[4]">SQL</div>
+                <div class="cosmic-glow bg-cyan-500/30 p-6 text-center text-white font-medium rounded-lg hover:bg-cyan-500/50 transition font-exo hover-sound" data-i18n="skills.list[5]">Linux</div>
+                <div class="cosmic-glow bg-cyan-500/30 p-6 text-center text-white font-medium rounded-lg hover:bg-cyan-500/50 transition font-exo hover-sound" data-i18n="skills.list[6]">Firebase</div>
+                <div class="cosmic-glow bg-cyan-500/30 p-6 text-center text-white font-medium rounded-lg hover:bg-cyan-500/50 transition font-exo hover-sound" data-i18n="skills.list[7]">Arduino</div>
+                <div class="cosmic-glow bg-cyan-500/30 p-6 text-center text-white font-medium rounded-lg hover:bg-cyan-500/50 transition font-exo hover-sound" data-i18n="skills.list[8]">Google Colab</div>
+                <div class="cosmic-glow bg-cyan-500/30 p-6 text-center text-white font-medium rounded-lg hover:bg-cyan-500/50 transition font-exo hover-sound" data-i18n="skills.list[9]">Git</div>
+                <div class="cosmic-glow bg-cyan-500/30 p-6 text-center text-white font-medium rounded-lg hover:bg-cyan-500/50 transition font-exo hover-sound" data-i18n="skills.list[10]">AI/ML (Beginner)</div>
+                <div class="cosmic-glow bg-cyan-500/30 p-6 text-center text-white font-medium rounded-lg hover:bg-cyan-500/50 transition font-exo hover-sound" data-i18n="skills.list[11]">Data Visualization</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-48 bg-black">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-6xl font-bold text-center mb-16 text-white font-exo" style="animation: text-glow 3s infinite;" data-i18n="contact.title">Get in Touch</h2>
+            <p class="text-2xl text-center text-gray-100 mb-10 fade-in" data-i18n="contact.subtitle">Embark on a journey to create the extraordinary. Connect now!</p>
+            <!-- Contact Form with Web3Forms -->
+            <form action="https://api.web3forms.com/submit" method="POST" class="max-w-lg mx-auto fade-in">
+                <input type="hidden" name="access_key" value="8e7ccc74-dfe4-4562-b775-835d5015087f">
+                <div class="mb-6">
+                    <label for="name" class="block text-lg text-gray-100 font-exo mb-2" data-i18n="contact.name_label">Name</label>
+                    <input type="text" id="name" name="name" required class="w-full px-4 py-3 rounded-lg text-white form-input focus:outline-none hover-sound" placeholder="Your Name" data-i18n-placeholder="contact.name_placeholder">
+                </div>
+                <div class="mb-6">
+                    <label for="email" class="block text-lg text-gray-100 font-exo mb-2" data-i18n="contact.email_label">Email</label>
+                    <input type="email" id="email" name="email" required class="w-full px-4 py-3 rounded-lg text-white form-input focus:outline-none hover-sound" placeholder="your.email@example.com" data-i18n-placeholder="contact.email_placeholder">
+                </div>
+                <div class="mb-6">
+                    <label for="message" class="block text-lg text-gray-100 font-exo mb-2" data-i18n="contact.message_label">Message</label>
+                    <textarea id="message" name="message" required class="w-full px-4 py-3 rounded-lg text-white form-input focus:outline-none hover-sound" rows="5" placeholder="Your Message" data-i18n-placeholder="contact.message_placeholder"></textarea>
+                </div>
+                <!-- Optional hCaptcha -->
+                <div class="mb-6">
+                    <div data-hcaptcha></div>
+                </div>
+                <button type="submit" class="cosmic-glow bg-cyan-500/30 text-white px-14 py-6 rounded-full font-medium hover:bg-cyan-500/50 transition card-3d font-exo hover-sound w-full" style="animation: cosmic-pulse 2s infinite;" data-i18n="contact.submit">Send Message</button>
+            </form>
+            <!-- Social Links -->
+            <div class="flex justify-center space-x-10 mt-10 fade-in">
+                <a href="mailto:sksujonhaque@gmail.com" class="cosmic-glow bg-cyan-500/30 text-white px-14 py-6 rounded-full font-medium hover:bg-cyan-500/50 transition card-3d font-exo hover-sound" data-i18n="contact.email_me">Email Me</a>
+                <a href="https://www.linkedin.com/in/sekh-sujon-haque-/" target="_blank" class="cosmic-glow bg-cyan-500/30 text-white px-14 py-6 rounded-full font-medium hover:bg-cyan-500/50 transition card-3d font-exo hover-sound" data-i18n="contact.linkedin">LinkedIn</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black text-gray-400 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="font-exo text-lg" data-i18n="footer.copyright">© 2025 Sekh Sujon Haque. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Translation data
+        const translations = {
+            en: {
+                nav: {
+                    title: "Sekh Sujon Haque",
+                    home: "Home",
+                    about: "About",
+                    projects: "Projects",
+                    skills: "Skills",
+                    contact: "Contact"
+                },
+                home: {
+                    title: "Hi, I'm Sekh Sujon Haque",
+                    subtitle: "A cosmic AI/ML Engineer crafting interstellar solutions for the future.",
+                    connect: "Let's Connect"
+                },
+                about: {
+                    title: "About Me",
+                    bio1: "I'm an aspiring <strong>AI/ML Engineer</strong> with hands-on experience in building intelligent systems that merge hardware and software—like my recent AI-powered agricultural robot. My expertise lies in Python, ML, Arduino-IoT, and Firebase, and I'm driven by the goal of making tech accessible, sustainable, and impactful.",
+                    bio2: "I'm currently pursuing a <strong>B.Tech in Computer Science Engineering</strong> from <strong>Lovely Professional University</strong>. I’ve led multiple innovation-driven projects, participated in university hackathons, and continue to grow my knowledge in the space of Data Science and Artificial Intelligence. Explore my work or connect with me on LinkedIn!",
+                    linkedin: "View LinkedIn"
+                },
+                projects: {
+                    title: "My Projects",
+                    list: [
+                        {
+                            title: "AI-Powered Agricultural Robot",
+                            description: "An automated robot that detects plant diseases using AI, monitors environmental data, and sprays pesticides as needed for sustainable farming.",
+                            link: "Documentation coming soon"
+                        },
+                        {
+                            title: "Voice + Obstacle Avoiding Robot",
+                            description: "A voice-controlled robot that can navigate around obstacles autonomously using sensor inputs and speech commands.",
+                            link: "Documentation coming soon"
+                        },
+                        {
+                            title: "Attendance Management System",
+                            description: "A system to efficiently track and manage attendance records for educational institutions with easy reporting features.",
+                            link: "View Project →"
+                        },
+                        {
+                            title: "Environmental Awareness AI Tool",
+                            description: "An AI-driven tool that educates users about pollution impacts on pollinators and suggests actionable environmental protection tips.",
+                            link: "View Project →"
+                        },
+                        {
+                            title: "AI Career Guidance Platform",
+                            description: "A web app leveraging AI to recommend personalized career paths based on user skills, preferences, and market trends.",
+                            link: "View Project →"
+                        },
+                        {
+                            title: "Virtual Assistant – Tom",
+                            description: "“Tom” is a browser-based virtual assistant built with HTML, CSS, and JavaScript. It responds to voice commands and performs basic web tasks using the Web Speech API.",
+                            link: "View Project →"
+                        },
+                        {
+                            title: "AI-Powered Mood Tracker",
+                            description: "A smart mood tracking web app that uses AI to analyze user inputs, detect emotional tone, and provide personalized feedback and motivational quotes.",
+                            link: "View Project →"
+                        },
+                        {
+                            title: "AI Chatbot",
+                            description: "An intelligent chatbot built with JavaScript and integrated AI APIs to provide meaningful responses and assist with FAQs or conversations.",
+                            link: "View Project →"
+                        }
+                    ]
+                },
+                skills: {
+                    title: "Skills",
+                    list: [
+                        "Python",
+                        "C Programming",
+                        "HTML/CSS",
+                        "JavaScript",
+                        "SQL",
+                        "Linux",
+                        "Firebase",
+                        "Arduino",
+                        "Google Colab",
+                        "Git",
+                        "AI/ML (Beginner)",
+                        "Data Visualization"
+                    ]
+                },
+                contact: {
+                    title: "Get in Touch",
+                    subtitle: "Embark on a journey to create the extraordinary. Connect now!",
+                    name_label: "Name",
+                    name_placeholder: "Your Name",
+                    email_label: "Email",
+                    email_placeholder: "your.email@example.com",
+                    message_label: "Message",
+                    message_placeholder: "Your Message",
+                    submit: "Send Message",
+                    email_me: "Email Me",
+                    linkedin: "LinkedIn"
+                },
+                footer: {
+                    copyright: "© 2025 Sekh Sujon Haque. All rights reserved."
+                }
+            },
+            hi: {
+                nav: {
+                    title: "सेख सुजोन हक",
+                    home: "होम",
+                    about: "मेरे बारे में",
+                    projects: "प्रोजेक्ट्स",
+                    skills: "कौशल",
+                    contact: "संपर्क"
+                },
+                home: {
+                    title: "हाय, मैं सेख सुजोन हक हूँ",
+                    subtitle: "एक कॉस्मिक AI/ML इंजीनियर जो भविष्य के लिए अंतरतारकीय समाधान तैयार करता है।",
+                    connect: "आइए जुड़ें"
+                },
+                about: {
+                    title: "मेरे बारे में",
+                    bio1: "मैं एक महत्वाकांक्षी <strong>AI/ML इंजीनियर</strong> हूँ, जिसके पास हार्डवेयर और सॉफ्टवेयर को एकीकृत करने वाले बुद्धिमान सिस्टम बनाने का व्यावहारिक अनुभव है—जैसे कि मेरा हालिया AI-संचालित कृषि रोबोट। मेरी विशेषज्ञता Python, ML, Arduino-IoT, और Firebase में है, और मेरा लक्ष्य तकनीक को सुलभ, टिकाऊ और प्रभावशाली बनाना है।",
+                    bio2: "मैं वर्तमान में <strong>लवली प्रोफेशनल यूनिवर्सिटी</strong> से <strong>कंप्यूटर साइंस इंजीनियरिंग में बी.टेक</strong> कर रहा हूँ। मैंने कई नवाचार-प्रेरित प्रोजेक्ट्स का नेतृत्व किया है, विश्वविद्यालय हैकथॉन्स में भाग लिया है, और डेटा साइंस और कृत्रिम बुद्धिमत्ता के क्षेत्र में अपनी जानकारी बढ़ा रहा हूँ। मेरे काम का अन्वेषण करें या LinkedIn पर मुझसे जुड़ें!",
+                    linkedin: "LinkedIn देखें"
+                },
+                projects: {
+                    title: "मेरे प्रोजेक्ट्स",
+                    list: [
+                        {
+                            title: "AI-संचालित कृषि रोबोट",
+                            description: "एक स्वचालित रोबोट जो AI का उपयोग करके पौधों की बीमारियों का पता लगाता है, पर्यावरणीय डेटा की निगरानी करता है, और टिकाऊ खेती के लिए आवश्यकतानुसार कीटनाशकों का छिड़काव करता है।",
+                            link: "दस्तावेज़ीकरण जल्द ही उपलब्ध"
+                        },
+                        {
+                            title: "वॉयस + बाधा से बचने वाला रोबोट",
+                            description: "एक वॉयस-नियंत्रित रोबोट जो सेंसर इनपुट और वॉयस कमांड का उपयोग करके स्वायत्त रूप से बाधाओं से बच सकता है।",
+                            link: "दस्तावेज़ीकरण जल्द ही उपलब्ध"
+                        },
+                        {
+                            title: "उपस्थिति प्रबंधन प्रणाली",
+                            description: "शैक्षणिक संस्थानों के लिए उपस्थिति रिकॉर्ड को कुशलतापूर्वक ट्रैक और प्रबंधित करने के लिए आसान रिपोर्टिंग सुविधाओं के साथ एक प्रणाली।",
+                            link: "प्रोजेक्ट देखें →"
+                        },
+                        {
+                            title: "पर्यावरण जागरूकता AI टूल",
+                            description: "एक AI-चालित टूल जो उपयोगकर्ताओं को परागणकों पर प्रदूषण के प्रभावों के बारे में शिक्षित करता है और पर्यावरण संरक्षण के लिए उपयोगी सुझाव देता है।",
+                            link: "प्रोजेक्ट देखें →"
+                        },
+                        {
+                            title: "AI करियर मार्गदर्शन मंच",
+                            description: "एक वेब ऐप जो उपयोगकर्ता के कौशल, प्राथमिकताओं और बाजार रुझानों के आधार पर व्यक्तिगत करियर पथ की सिफारिश करने के लिए AI का उपयोग करता है।",
+                            link: "प्रोजेक्ट देखें →"
+                        },
+                        {
+                            title: "वर्चुअल असिस्टेंट – टॉम",
+                            description: "“टॉम” HTML, CSS, और JavaScript के साथ बनाया गया एक ब्राउज़र-आधारित वर्चुअल असिस्टेंट है। यह वॉयस कमांड का जवाब देता है और वेब स्पीच API का उपयोग करके बुनियादी वेब कार्य करता है।",
+                            link: "प्रोजेक्ट देखें →"
+                        },
+                        {
+                            title: "AI-संचालित मूड ट्रैकर",
+                            description: "एक स्मार्ट मूड ट्रैकिंग वेब ऐप जो उपयोगकर्ता इनपुट का विश्लेषण करने, भावनात्मक स्वर का पता लगाने और व्यक्तिगत प्रतिक्रिया और प्रेरक उद्धरण प्रदान करने के लिए AI का उपयोग करता है।",
+                            link: "प्रोजेक्ट देखें →"
+                        },
+                        {
+                            title: "AI चैटबॉट",
+                            description: "JavaScript और एकीकृत AI APIs के साथ बनाया गया एक बुद्धिमान चैटबॉट जो अर्थपूर्ण जवाब देता है और FAQs या वार्तालाप में सहायता करता है।",
+                            link: "प्रोजेक्ट देखें →"
+                        }
+                    ]
+                },
+                skills: {
+                    title: "कौशल",
+                    list: [
+                        "पायथन",
+                        "सी प्रोग्रामिंग",
+                        "HTML/CSS",
+                        "जावास्क्रिप्ट",
+                        "SQL",
+                        "लिनक्स",
+                        "फायरबेस",
+                        "आर्डुइनो",
+                        "गूगल कोलैब",
+                        "गिट",
+                        "AI/ML (प्रारंभिक)",
+                        "डेटा विज़ुअलाइज़ेशन"
+                    ]
+                },
+                contact: {
+                    title: "संपर्क करें",
+                    subtitle: "असाधारण बनाने की यात्रा शुरू करें। अभी जुड़ें!",
+                    name_label: "नाम",
+                    name_placeholder: "आपका नाम",
+                    email_label: "ईमेल",
+                    email_placeholder: "your.email@example.com",
+                    message_label: "संदेश",
+                    message_placeholder: "आपका संदेश",
+                    submit: "संदेश भेजें",
+                    email_me: "मुझे ईमेल करें",
+                    linkedin: "LinkedIn"
+                },
+                footer: {
+                    copyright: "© 2025 सेख सुजोन हक। सर्वाधिकार सुरक्षित।"
+                }
+            },
+            bn: {
+                nav: {
+                    title: "সেখ সুজন হক",
+                    home: "হোম",
+                    about: "আমার সম্পর্কে",
+                    projects: "প্রকল্প",
+                    skills: "দক্ষতা",
+                    contact: "যোগাযোগ"
+                },
+                home: {
+                    title: "হাই, আমি সেখ সুজন হক",
+                    subtitle: "একজন কসমিক AI/ML ইঞ্জিনিয়ার যিনি ভবিষ্যতের জন্য আন্তঃনাক্ষত্রীয় সমাধান তৈরি করেন।",
+                    connect: "আসুন সংযোগ করি"
+                },
+                about: {
+                    title: "আমার সম্পর্কে",
+                    bio1: "আমি একজন উচ্চাকাঙ্ক্ষী <strong>AI/ML ইঞ্জিনিয়ার</strong> যার হার্ডওয়্যার এবং সফটওয়্যার একত্রিত করে বুদ্ধিমান সিস্টেম তৈরির ব্যবহারিক অভিজ্ঞতা রয়েছে—যেমন আমার সাম্প্রতিক AI-চালিত কৃষি রোবট। আমার দক্ষতা পাইথন, ML, Arduino-IoT, এবং Firebase-এ রয়েছে, এবং আমি প্রযুক্তিকে সহজলভ্য, টেকসই এবং প্রভাবশালী করার লক্ষ্যে চালিত।",
+                    bio2: "আমি বর্তমানে <strong>লাভলি প্রফেশনাল ইউনিভার্সিটি</strong> থেকে <strong>কম্পিউটার সায়েন্স ইঞ্জিনিয়ারিং-এ বিটেক</strong> করছি। আমি একাধিক উদ্ভাবন-চালিত প্রকল্পের নেতৃত্ব দিয়েছি, বিশ্ববিদ্যালয় হ্যাকাথনে অংশগ্রহণ করেছি, এবং ডেটা সায়েন্স এবং কৃত্রিম বুদ্ধিমত্তার ক্ষেত্রে আমার জ্ঞান বৃদ্ধি করছি। আমার কাজ অন্বেষণ করুন বা LinkedIn-এ আমার সাথে সংযোগ করুন!",
+                    linkedin: "LinkedIn দেখুন"
+                },
+                projects: {
+                    title: "আমার প্রকল্প",
+                    list: [
+                        {
+                            title: "AI-চালিত কৃষি রোবট",
+                            description: "একটি স্বয়ংক্রিয় রোবট যা AI ব্যবহার করে উদ্ভিদের রোগ শনাক্ত করে, পরিবেশগত ডেটা নিরীক্ষণ করে এবং টেকসই চাষের জন্য প্রয়োজনীয় কীটনাশক স্প্রে করে।",
+                            link: "ডকুমেন্টেশন শীঘ্রই আসছে"
+                        },
+                        {
+                            title: "ভয়েস + বাধা এড়ানো রোবট",
+                            description: "একটি ব্যবহারকারী-নিয়ন্ত্রিত রোবট যা সেন্সর ইনপুট এবং ভয়েস কমান্ড ব্যবহার করে স্বায়ত্তশাসিতভাবে বাধা এড়াতে পারে।",
+                            link: "ডকুমেন্টেশন শীঘ্রই আসছে"
+                        },
+                        {
+                            title: "উপস্থিতি ব্যবস্থাপনা সিস্টেম",
+                            description: "শিক্ষা প্রতিষ্ঠানের জন্য উপস্থিতি রেকর্ড দক্ষতার সাথে ট্র্যাক এবং পরিচালনা করার জন্য সহজ রিপোর্টিং বৈশিষ্ট্য সহ একটি সিস্টেম।",
+                            link: "প্রকল্প দেখুন →"
+                        },
+                        {
+                            title: "পরিবেশ সচেতনতা AI টুল",
+                            description: "একটি AI-চালিত টুল যা ব্যবহারকারীদের পরাগরেণুকারকদের উপর দূষণের প্রভাব সম্পর্কে শিক্ষা দেয় এবং পরিবেশ সুরক্ষার জন্য ব্যবহারযোগ্য পরামর্শ প্রদান করে।",
+                            link: "প্রকল্প দেখুন →"
+                        },
+                        {
+                            title: "AI ক্যারিয়ার গাইডেন্স প্ল্যাটফর্ম",
+                            description: "একটি ওয়েব অ্যাপ যা ব্যবহারকারীর দক্ষতা, পছন্দ এবং বাজার প্রবণতার উপর ভিত্তি করে ব্যক্তিগতকৃত ক্যারিয়ার পথের সুপারিশ করতে AI ব্যবহার করে।",
+                            link: "প্রকল্প দেখুন →"
+                        },
+                        {
+                            title: "ভার্চুয়াল অ্যাসিস্ট্যান্ট – টম",
+                            description: "“টম” HTML, CSS এবং JavaScript দিয়ে তৈরি একটি ব্রাউজার-ভিত্তিক ভার্চুয়াল অ্যাসিস্ট্যান্ট। এটি ভয়েস কমান্ডের উত্তর দেয় এবং ওয়েব স্পিচ API ব্যবহার করে মৌলিক ওয়েব কাজ সম্পাদন করে।",
+                            link: "প্রকল্প দেখুন →"
+                        },
+                        {
+                            title: "AI-চালিত মুড ট্র্যাকার",
+                            description: "একটি স্মার্ট মুড ট্র্যাকিং ওয়েব অ্যাপ যা ব্যবহারকারীর ইনপুট বিশ্লেষণ করতে, মানসিক স্বর শনাক্ত করতে এবং  ব্যক্তিগত প্রতিক্রিয়া এবং প্রেরণাদায়ক উদ্ধৃতি প্রদান করতে AI ব্যবহার করে।",
+                            link: "প্রকল্প দেখুন →"
+                        },
+                        {
+                            title: "AI চ্যাটবট",
+                            description: "JavaScript এবং সমন্বিত AI APIs দিয়ে তৈরি একটি বুদ্ধিমান চ্যাটবট যা অর্থপূর্ণ প্রতিক্রিয়া দেয় এবং FAQs বা কথোপকথনে সহায়তা করে।",
+                            link: "প্রকল্প দেখুন →"
+                        }
+                    ]
+                },
+                skills: {
+                    title: "দক্ষতা",
+                    list: [
+                        "পাইথন",
+                        "সি প্রোগ্রামিং",
+                        "HTML/CSS",
+                        "জাভাস্ক্রিপ্ট",
+                        "SQL",
+                        "লিনাক্স",
+                        "ফায়ারবেস",
+                        "আর্ডুইনো",
+                        "গুগল কোলাব",
+                        "গিট",
+                        "AI/ML (প্রাথমিক)",
+                        "ডেটা ভিজুয়ালাইজেশন"
+                    ]
+                },
+                contact: {
+                    title: "যোগাযোগ করুন",
+                    subtitle: "অসাধারণ সৃষ্টির যাত্রা শুরু করুন। এখনই সংযোগ করুন!",
+                    name_label: "নাম",
+                    name_placeholder: "আপনার নাম",
+                    email_label: "ইমেল",
+                    email_placeholder: "your.email@example.com",
+                    message_label: "বার্তা",
+                    message_placeholder: "আপনার বার্তা",
+                    submit: "বার্তা পাঠান",
+                    email_me: "আমাকে ইমেল করুন",
+                    linkedin: "LinkedIn"
+                },
+                footer: {
+                    copyright: "© ২০২৫ সেখ সুজন হক। সর্বস্বত্ব সংরক্ষিত।"
+                }
+            },
+            ta: {
+                nav: {
+                    title: "சேக் சுஜோன் ஹக்",
+                    home: "முகப்பு",
+                    about: "என்னைப் பற்றி",
+                    projects: "திட்டங்கள்",
+                    skills: "திறன்கள்",
+                    contact: "தொடர்பு"
+                },
+                home: {
+                    title: "வணக்கம், நான் சேக் சுஜோன் ஹக்",
+                    subtitle: "எதிர்காலத்திற்காக நட்சத்திரங்களுக்கு இடையேயான தீர்வுகளை உருவாக்கும் ஒரு காஸ்மிக் AI/ML பொறியாளர்.",
+                    connect: "இணைப்போம்"
+                },
+                about: {
+                    title: "என்னைப் பற்றி",
+                    bio1: "நான் ஒரு ஆர்வமுள்ள <strong>AI/ML பொறியாளர்</strong>, வன்பொருள் மற்றும் மென்பொருளை ஒருங்கிணைக்கும் புத்திசாலித்தனமான அமைப்புகளை உருவாக்குவதில் நடைமுறை அனுபவம் கொண்டவன்—எனது சமீபத்திய AI-இயக்கப்பட்ட விவசாய ரோபோவைப் போல. எனது நிபுணத்துவம் Python, ML, Arduino-IoT, மற்றும் Firebase-இல் உள்ளது, மேலும் தொழில்நுட்பத்தை அணுகக்கூடியதாகவும், நிலையானதாகவும், தாக்கமுள்ளதாகவும் மாற்றுவதற்கு உந்தப்பட்டவன்.",
+                    bio2: "நான் தற்போது <strong>லவ்லி புரொபெஷனல் யூனிவர்சிட்டி</strong>யில் <strong>கணினி அறிவியல் பொறியியலில் B.Tech</strong> பயின்று வருகிறேன். நான் பல புதுமை-உந்துதல் திட்டங்களை வழிநடத்தியுள்ளேன், பல்கலைக்கழக ஹேக்கத்தான்களில் பங்கேற்றுள்ளேன், மற்றும் டேட்டா சயின்ஸ் மற்றும் செயற்கை நுண்ணறிவு துறையில் எனது அறிவை வளர்த்து வருகிறேன். எனது பணிகளை ஆராய்ந்து அல்லது LinkedIn-இல் என்னுடன் இணையுங்கள்!",
+                    linkedin: "LinkedIn பார்க்கவும்"
+                },
+                projects: {
+                    title: "எனது திட்டங்கள்",
+                    list: [
+                        {
+                            title: "AI-இயக்கப்பட்ட விவசாய ரோபோ",
+                            description: "AI-ஐப் பயன்படுத்தி தாவர நோய்களைக் கண்டறியும், சுற்றுச்சூழல் தரவுகளை கண்காணிக்கும், மற்றும் நிலையான விவசாயத்திற்கு தேவையான பூச்சிக்கொல்லிகளை தெளிக்கும் ஒரு தானியங்கி ரோபோ.",
+                            link: "ஆவணங்கள் விரைவில்"
+                        },
+                        {
+                            title: "குரல் + தடை தவிர்க்கும் ரோபோ",
+                            description: "சென்சார் உள்ளீடுகள் மற்றும் குரல் கட்டளைகளைப் பயன்படுத்தி தன்னாட்சியாக தடைகளைத் தவிர்க்கக்கூடிய ஒரு குரல்-கட்டுப்படுத்தப்பட்ட ரோபோ.",
+                            link: "ஆவணங்கள் விரைவில்"
+                        },
+                        {
+                            title: "வருகை மேலாண்மை அமைப்பு",
+                            description: "கல்வி நிறுவனங்களுக்காக வருகை பதிவுகளை திறமையாக கண்காணிக்கவும் மேலாண்மை செய்யவும் எளிய அறிக்கையிடல் அம்சங்களுடன் ஒரு அமைப்பு.",
+                            link: "திட்டத்தைப் பார்க்கவும் →"
+                        },
+                        {
+                            title: "சுற்றுச்சூழல் விழிப்புணர்வு AI கருவி",
+                            description: "பயனர்களுக்கு மகரந்தச் சேர்க்கைகளில் மாசுபாட்டின் தாக்கங்கள் பற்றி கற்பிக்கவும், செயல்படுத்தக்கூடிய சுற்றுச்சூழல் பாதுகாப்பு குறிப்புகளை பரிந்துரைக்கவும் ஒரு AI-இயக்கப்பட்ட கருவி.",
+                            link: "திட்டத்தைப் பார்க்கவும் →"
+                        },
+                        {
+                            title: "AI தொழில் வழிகாட்டல் தளம்",
+                            description: "பயனர் திறன்கள், விருப்பங்கள் மற்றும் சந்தை போக்குகளின் அடிப்படையில் தனிப்பயனாக்கப்பட்ட தொழில் பாதைகளை பரிந்துரைக்க AI-ஐப் பயன்படுத்தும் ஒரு வலை பயன்பாடு.",
+                            link: "திட்டத்தைப் பார்க்கவும் →"
+                        },
+                        {
+                            title: "மெய்நிகர் உதவியாளர் – டாம்",
+                            description: "“டாம்” HTML, CSS, மற்றும் JavaScript உடன் கட்டமைக்கப்பட்ட ஒரு உலாவி-அடிப்படையிலான மெய்நிகர் உதவியாளர். இது குரல் கட்டளைகளுக்கு பதிலளிக்கிறது மற்றும் வலை பேச்சு API-ஐப் பயன்படுத்தி அடிப்படை வலை பணிகளை செய்கிறது.",
+                            link: "திட்டத்தைப் பார்க்கவும் →"
+                        },
+                        {
+                            title: "AI-இயக்கப்பட்ட மனநிலை கண்காணிப்பு",
+                            description: "பயனர் உள்ளீடுகளை பகுப்பாய்வு செய்ய, உணர்ச்சி தொனியை கண்டறிய, மற்றும் தனிப்பயனாக்கப்பட்ட பின்னூட்டம் மற்றும் ஊக்கமளிக்கும் மேற்கோள்களை வழங்க AI-ஐப் பயன்படுத்தும் ஒரு ஸ்மார்ட் மனநிலை கண்காணிப்பு வலை பயன்பாடு.",
+                            link: "திட்டத்தைப் பார்க்கவும் →"
+                        },
+                        {
+                            title: "AI சாட்போட்",
+                            description: "JavaScript மற்றும் ஒருங்கிணைந்த AI APIs உடன் கட்டமைக்கப்பட்ட ஒரு புத்திசாலித்தனமான சாட்போட், இது அர்த்தமுள்ள பதில்களை வழங்குகிறது மற்றும் FAQs அல்லது உரையாடல்களுக்கு உதவுகிறது.",
+                            link: "திட்டத்தைப் பார்க்கவும் →"
+                        }
+                    ]
+                },
+                skills: {
+                    title: "திறன்கள்",
+                    list: [
+                        "பைதான்",
+                        "சி புரோகிராமிங்",
+                        "HTML/CSS",
+                        "ஜாவாஸ்கிரிப்ட்",
+                        "SQL",
+                        "லினக்ஸ்",
+                        "பயர்பேஸ்",
+                        "ஆர்டுயினோ",
+                        "கூகுள் கோலாப்",
+                        "கிட்",
+                        "AI/ML (தொடக்கநிலை)",
+                        "தரவு காட்சிப்படுத்தல்"
+                    ]
+                },
+                contact: {
+                    title: "தொடர்பு கொள்ளவும்",
+                    subtitle: "புரட்சிகரமானவற்றை உருவாக்கும் பயணத்தைத் தொடங்குங்கள். இப்போது இணையுங்கள்!",
+                    name_label: "பெயர்",
+                    name_placeholder: "உங்கள் பெயர்",
+                    email_label: "மின்னஞ்சல்",
+                    email_placeholder: "your.email@example.com",
+                    message_label: "செய்தி",
+                    message_placeholder: "உங்கள் செய்தி",
+                    submit: "செய்தி அனுப்பவும்",
+                    email_me: "எனக்கு மின்னஞ்சல் அனுப்பவும்",
+                    linkedin: "LinkedIn"
+                },
+                footer: {
+                    copyright: "© 2025 சேக் சுஜோன் ஹக். அனைத்து உரிமைகளும் பாதுகாக்கப்பட்டவை."
+                }
+            },
+            te: {
+                nav: {
+                    title: "సేఖ్ సుజోన్ హక్",
+                    home: "హోమ్",
+                    about: "నా గురించి",
+                    projects: "ప్రాజెక్టులు",
+                    skills: "నైపుణ్యాలు",
+                    contact: "సంప్రదించండి"
+                },
+                home: {
+                    title: "హాయ్, నేను సేఖ్ సుజోన్ హక్",
+                    subtitle: "భవిష్యత్తు కోసం ఇంటర్‌స్టెల్లార్ సొల్యూషన్స్ రూపొందించే కాస్మిక్ AI/ML ఇంజనీర్.",
+                    connect: "కనెక్ట్ అవ్వండి"
+                },
+                about: {
+                    title: "నా గురించి",
+                    bio1: "నేను ఒక ఆసక్తిగల <strong>AI/ML ఇంజనీర్</strong>, హార్డ్‌వేర్ మరియు సాఫ్ట్‌వేర్‌ను ఏకీకృతం చేసే ఇంటెలిజెంట్ సిస్టమ్స్ నిర్మించడంలో ప్రాక్టికల్ అనుభవం కలిగి ఉన్నాను—ఇటీవలి నా AI-పవర్డ్ వ్యవసాయ రోబోట్ వంటివి. నా నైపుణ్యం Python, ML, Arduino-IoT, మరియు Firebaseలో ఉంది, మరియు టెక్నాలజీని అందుబాటులో, స్థిరమైనదిగా, మరియు ప్రభావవంతమైనదిగా చేయడం నా లక్ష్యం.",
+                    bio2: "నేను ప్రస్తుతం <strong>లవ్లీ ప్రొఫెషనల్ యూనివర్సిటీ</strong> నుండి <strong>కంప్యూటర్ సైన్స్ ఇంజనీరింగ్‌లో B.Tech</strong> చేస్తున్నాను. నేను అనేక ఆవిష్కరణ-ప్రేరిత ప్రాజెక్టులను నడిపించాను, యూనివర్సిటీ హ్యాకథాన్‌లలో పాల్గొన్నాను, మరియు డేటా సైన్స్ మరియు ఆర్టిఫిషియల్ ఇంటెలిజెన్స్ రంగంలో నా జ్ఞానాన్ని పెంచుకుంటున్నాను. నా పనిని అన్వేషించండి లేదా LinkedInలో నాతో కనెక్ట్ అవ్వండి!",
+                    linkedin: "LinkedIn చూడండి"
+                },
+                projects: {
+                    title: "నా ప్రాజెక్టులు",
+                    list: [
+                        {
+                            title: "AI-పవర్డ్ వ్యవసాయ రోబోట్",
+                            description: "AIని ఉపయోగించి మొక్కల వ్యాధులను గుర్తించే, పర్యావరణ డేటాను పర్యవేక్షించే, మరియు స్థిరమైన వ్యవసాయం కోసం అవసరమైన పురుగుమందులను స్ప్రే చేసే ఆటోమేటెడ్ రోబోట్.",
+                            link: "డాక్యుమెంటేషన్ త్వరలో"
+                        },
+                        {
+                            title: "వాయిస్ + అడ్డంకులను తప్పించే రోబోట్",
+                            description: "సెన్సార్ ఇన్‌పుట్‌లు మరియు వాయిస్ కమాండ్‌లను ఉపయోగించి స్వయంచాలకంగా అడ్డంకులను తప్పించగల వాయిస్-నియంత్రిత రోబోట్.",
+                            link: "డాక్యుమెంటేషన్ త్వరలో"
+                        },
+                        {
+                            title: "హాజరు నిర్వహణ వ్యవస్థ",
+                            description: "విద్యా సంస్థల కోసం హాజరు రికార్డులను సమర్థవంతంగా ట్రాక్ చేయడానికి మరియు నిర్వహించడానికి సులభమైన రిపోర్టింగ్ ఫీచర్లతో ఒక వ్యవస్థ.",
+                            link: "ప్రాజెక్ట్ చూడండి →"
+                        },
+                        {
+                            title: "పర్యావరణ అవగాహన AI సాధనం",
+                            description: "పరాగసంపర్కాలపై కాలుష్యం యొక్క ప్రభావాల గురించి వినియోగదారులకు విద్యను అందించే మరియు చర్య తీసుకోగల పర్యావరణ పరిరక్షణ చిట్కాలను సూచించే AI-ఆధారిత సాధనం.",
+                            link: "ప్రాజెక్ట్ చూడండి →"
+                        },
+                                                {
+                            title: "AI కెరీర్ గైడెన్స్ ప్లాట్‌ఫాం",
+                            description: "వినియోగదారు నైపుణ్యాలు, ప్రాధాన్యతలు మరియు మార్కెట్ ట్రెండ్‌ల ఆధారంగా వ్యక్తిగతీకరించిన కెరీర్ మార్గాలను సిఫారసు చేయడానికి AIని ఉపయోగించే వెబ్ యాప్.",
+                            link: "ప్రాజెక్ట్ చూడండి →"
+                        },
+                        {
+                            title: "వర్చువల్ అసిస్టెంట్ – టామ్",
+                            description: "“టామ్” HTML, CSS, మరియు JavaScriptతో నిర్మించిన బ్రౌజర్-ఆధారిత వర్చువల్ అసిస్టెంట్. ఇది వాయిస్ కమాండ్‌లకు స్పందిస్తుంది మరియు వెబ్ స్పీచ్ APIని ఉపయోగించి ప్రాథమిక వెబ్ టాస్క్‌లను నిర్వహిస్తుంది.",
+                            link: "ప్రాజెక్ట్ చూడండి →"
+                        },
+                        {
+                            title: "AI-పవర్డ్ మూడ్ ట్రాకర్",
+                            description: "వినియోగదారు ఇన్‌పుట్‌లను విశ్లేషించడానికి, భావోద్వేగ స్వరాన్ని గుర్తించడానికి మరియు వ్యక్తిగతీకరించిన ఫీడ్‌బ్యాక్ మరియు ప్రేరణాత్మక కోట్‌లను అందించడానికి AIని ఉపయోగించే స్మార్ట్ మూడ్ ట్రాకింగ్ వెబ్ యాప్.",
+                            link: "ప్రాజెక్ట్ చూడండి →"
+                        },
+                        {
+                            title: "AI చాట్‌బాట్",
+                            description: "JavaScript మరియు ఇంటిగ్రేటెడ్ AI APIsతో నిర్మించిన ఇంటెలిజెంట్ చాట్‌బాట్, ఇది అర్థవంతమైన స్పందనలను అందిస్తుంది మరియు FAQs లేదా సంభాషణలకు సహాయపడుతుంది.",
+                            link: "ప్రాజెక్ట్ చూడండి →"
+                        }
+                    ]
+                },
+                skills: {
+                    title: "నైపుణ్యాలు",
+                    list: [
+                        "పైథాన్",
+                        "సీ ప్రోగ్రామింగ్",
+                        "HTML/CSS",
+                        "జావాస్క్రిప్ట్",
+                        "SQL",
+                        "లినక్స్",
+                        "ఫైర్‌బేస్",
+                        "ఆర్డునో",
+                        "గూగుల్ కోలాబ్",
+                        "గిట్",
+                        "AI/ML (ప్రారంభకుడు)",
+                        "డేటా విజువలైజేషన్"
+                    ]
+                },
+                contact: {
+                    title: "సంప్రదించండి",
+                    subtitle: "అసాధారణమైన సృష్టిని ప్రారంభించండి. ఇప్పుడే కనెక్ట్ అవ్వండి!",
+                    name_label: "పేరు",
+                    name_placeholder: "మీ పేరు",
+                    email_label: "ఇమెయిల్",
+                    email_placeholder: "your.email@example.com",
+                    message_label: "సందేశం",
+                    message_placeholder: "మీ సందేశం",
+                    submit: "సందేశం పంపండి",
+                    email_me: "నాకు ఇమెయిల్ చేయండి",
+                    linkedin: "లింక్డ్ఇన్"
+                },
+                footer: {
+                    copyright: "© 2025 సేఖ్ సుజోన్ హక్. అన్ని హక్కులు రిజర్వ్ చేయబడ్డాయి."
+                }
+            },
+            ml: {
+                nav: {
+                    title: "സേഖ് സുജോൻ ഹഖ്",
+                    home: "ഹോം",
+                    about: "എന്റെ കുറിച്ച്",
+                    projects: "പ്രോജക്ടുകൾ",
+                    skills: "നൈപുണ്യങ്ങൾ",
+                    contact: "ബന്ധപ്പെടുക"
+                },
+                home: {
+                    title: "ഹായ്, ഞാൻ സേഖ് സുജോൻ ഹഖ്",
+                    subtitle: "ഭാവിയിലേക്കുള്ള ഇന്റർസ്റ്റെല്ലാർ പരിഹാരങ്ങൾ രൂപപ്പെടുത്തുന്ന ഒരു കോസ്മിക് AI/ML എഞ്ചിനീയർ.",
+                    connect: "നമുക്ക് ബന്ധപ്പെടാം"
+                },
+                about: {
+                    title: "എന്റെ കുറിച്ച്",
+                    bio1: "ഞാൻ ഒരു ആഗ്രഹമുള്ള <strong>AI/ML എഞ്ചിനീയർ</strong> ആണ്, ഹാർഡ്‌വെയറും സോഫ്റ്റ്‌വെയറും സംയോജിപ്പിക്കുന്ന ഇന്റലിജന്റ് സിസ്റ്റങ്ങൾ നിർമ്മിക്കുന്നതിൽ പ്രായോഗിക അനുഭവമുള്ളവൻ—എന്റെ സമീപകാല AI-പവർഡ് അഗ്രികൾച്ചറൽ റോബോട്ടിനെപ്പോലെ. എന്റെ വൈദഗ്ധ്യം Python, ML, Arduino-IoT, Firebase എന്നിവയിലാണ്, കൂടാതെ ടെക്‌നോളജിയെ ആക്സസ്സബിൾ, സുസ്ഥിരവും പ്രഭാവമുള്ളതുമാക്കുക എന്ന ലക്ഷ്യത്താൽ പ്രചോദിതനാണ്.",
+                    bio2: "ഞാൻ നിലവിൽ <strong>ലവ്‌ലി പ്രൊഫഷണൽ യൂണിവേഴ്സിറ്റി</strong>യിൽ നിന്ന് <strong>കമ്പ്യൂട്ടർ സയൻസ് എഞ്ചിനീയറിംഗിൽ B.Tech</strong> പഠിക്കുന്നു. ഞാൻ നിരവധി ഇന്നൊവേഷൻ-നയിക്കപ്പെടുന്ന പ്രോജക്ടുകൾക്ക് നേതൃത്വം നൽകിയിട്ടുണ്ട്, യൂണിവേഴ്സിറ്റി ഹാക്കത്തോണുകളിൽ പങ്കെടുത്തിട്ടുണ്ട്, കൂടാതെ ഡാറ്റാ സയൻസ്, ആർട്ടിഫിഷ്യൽ ഇന്റലിജൻസ് എന്നീ മേഖലകളിൽ എന്റെ അറിവ് വർധിപ്പിക്കുന്നു. എന്റെ പ്രവർത്തനങ്ങൾ പര്യവേക്ഷണം ചെയ്യുക അല്ലെങ്കിൽ LinkedIn-ൽ എന്നോട് ബന്ധപ്പെടുക!",
+                    linkedin: "LinkedIn കാണുക"
+                },
+                projects: {
+                    title: "എന്റെ പ്രോജക്ടുകൾ",
+                    list: [
+                        {
+                            title: "AI-പവർഡ് അഗ്രികൾച്ചറൽ റോബോട്ട്",
+                            description: "AI ഉപയോഗിച്ച് സസ്യരോഗങ്ങൾ കണ്ടെത്തുന്ന, പരിസ്ഥിതി ഡാറ്റ നിരീക്ഷിക്കുന്ന, സുസ്ഥിര കൃഷിക്കായി ആവശ്യമായ കീടനാശിനികൾ തളിക്കുന്ന ഒരു ഓട്ടോമേറ്റഡ് റോബോട്ട്.",
+                            link: "ഡോക്യുമെന്റേഷൻ ഉടൻ വരുന്നു"
+                        },
+                        {
+                            title: "വോയ്സ് + ഒബ്സ്റ്റാക്കിൾ അവോയ്ഡിംഗ് റോബോട്ട്",
+                            description: "സെൻസർ ഇൻപുട്ടുകളും വോയ്സ് കമാൻഡുകളും ഉപയോഗിച്ച് സ്വയംഭരണാധികാരത്തോടെ തടസ്സങ്ങൾ ഒഴിവാക്കാൻ കഴിയുന്ന ഒരു വോയ്സ്-നിയന്ത്രിത റോബോട്ട്.",
+                            link: "ഡോക്യുമെന്റേഷൻ ഉടൻ വരുന്നു"
+                        },
+                        {
+                            title: "അറ്റൻഡൻസ് മാനേജ്മെന്റ് സിസ്റ്റം",
+                            description: "വിദ്യാഭ്യാസ സ്ഥാപനങ്ങൾക്കായി അറ്റൻഡൻസ് റെക്കോർഡുകൾ കാര്യക്ഷമമായി ട്രാക്ക് ചെയ്യാനും മാനേജ് ചെയ്യാനും എളുപ്പമുള്ള റിപ്പോർട്ടിംഗ് ഫീച്ചറുകളോടുകൂടിയ ഒരു സിസ്റ്റം.",
+                            link: "പ്രോജക്ട് കാണുക →"
+                        },
+                        {
+                            title: "പരിസ്ഥിതി അവബോധ AI ടൂൾ",
+                            description: "പോളിനേറ്റർമാർക്ക് മേലുള്ള മലിനീകരണത്തിന്റെ ആഘാതത്തെക്കുറിച്ച് ഉപയോക്താക്കളെ ബോധവൽക്കരിക്കുകയും പ്രവർത്തനക്ഷമമായ പരിസ്ഥിതി സംരക്ഷണ നുറുങ്ങുകൾ നിർദ്ദേശിക്കുകയും ചെയ്യുന്ന ഒരു AI-നയിക്കപ്പെടുന്ന ടൂൾ.",
+                            link: "പ്രോജക്ട് കാണുക →"
+                        },
+                        {
+                            title: "AI കരിയർ ഗൈഡൻസ് പ്ലാറ്റ്ഫോം",
+                            description: "ഉപയോക്താവിന്റെ നൈപുണ്യങ്ങൾ, മുൻഗണനകൾ, വിപണി ട്രെൻഡുകൾ എന്നിവയെ അടിസ്ഥാനമാക്കി വ്യക്തിഗതമാക്കിയ കരിയർ പാതകൾ ശുപാർശ ചെയ്യാൻ AI ഉപയോഗിക്കുന്ന ഒരു വെബ് ആപ്പ്.",
+                            link: "പ്രോജക്ട് കാണുക →"
+                        },
+                        {
+                            title: "വെർച്വൽ അസിസ്റ്റന്റ് – ടോം",
+                            description: "“ടോം” HTML, CSS, JavaScript എന്നിവ ഉപയോഗിച്ച് നിർമ്മിച്ച ഒരു ബ്രൗസർ അധിഷ്ഠിത വെർച്വൽ അസിസ്റ്റന്റാണ്. ഇത് വോയ്സ് കമാൻഡുകൾക്ക് പ്രതികരിക്കുകയും വെബ് സ്പീച്ച് API ഉപയോഗിച്ച് അടിസ്ഥാന വെബ് ടാസ്കുകൾ നിർവ്വഹിക്കുകയും ചെയ്യുന്നു.",
+                            link: "പ്രോജക്ട് കാണുക →"
+                        },
+                        {
+                            title: "AI-പവർഡ് മൂഡ് ട്രാക്കർ",
+                            description: "ഉപയോക്തൃ ഇൻപുട്ടുകൾ വിശകലനം ചെയ്യാനും വൈകാരിക ടോൺ കണ്ടെത്താനും വ്യക്തിഗതമാക്കിയ ഫീഡ്‌ബാക്കും പ്രചോദനാത്മക ഉദ്ധരണികളും നൽകാനും AI ഉപയോഗിക്കുന്ന ഒരു സ്മാർട്ട് മൂഡ് ട്രാക്കിംഗ് വെബ് ആപ്പ്.",
+                            link: "പ്രോജക്ട് കാണുക →"
+                        },
+                        {
+                            title: "AI ചാറ്റ്ബോട്ട്",
+                            description: "JavaScript-ഉം ഇന്റഗ്രേറ്റഡ് AI APIs-ഉം ഉപയോഗിച്ച് നിർമ്മിച്ച ഒരു ഇന്റലിജന്റ് ചാറ്റ്ബോട്ട്, അർത്ഥവത്തായ പ്രതികരണങ്ങൾ നൽകുകയും FAQs-നോ സംഭാഷണങ്ങൾക്കോ സഹായിക്കുകയും ചെയ്യുന്നു.",
+                            link: "പ്രോജക്ട് കാണുക →"
+                        }
+                    ]
+                },
+                skills: {
+                    title: "നൈപുണ്യങ്ങൾ",
+                    list: [
+                        "പൈത്തൺ",
+                        "സി പ്രോഗ്രാമിംഗ്",
+                        "HTML/CSS",
+                        "ജാവാസ്ക്രിപ്റ്റ്",
+                        "SQL",
+                        "ലിനക്സ്",
+                        "ഫയർബേസ്",
+                        "ആർഡുയിനോ",
+                        "ഗൂഗിൾ കോലാബ്",
+                        "ഗിറ്റ്",
+                        "AI/ML (തുടക്കക്കാരൻ)",
+                        "ഡാറ്റാ വിഷ്വലൈസേഷൻ"
+                    ]
+                },
+                contact: {
+                    title: "ബന്ധപ്പെടുക",
+                    subtitle: "അസാധാരണമായത് സൃഷ്ടിക്കാനുള്ള യാത്ര ആരംഭിക്കുക. ഇപ്പോൾ ബന്ധപ്പെടുക!",
+                    name_label: "പേര്",
+                    name_placeholder: "നിന്റെ പേര്",
+                    email_label: "ഇമെയിൽ",
+                    email_placeholder: "your.email@example.com",
+                    message_label: "സന്ദേശം",
+                    message_placeholder: "നിന്റെ സന്ദേശം",
+                    submit: "സന്ദേശം അയയ്ക്കുക",
+                    email_me: "എനിക്ക് ഇമെയിൽ ചെയ്യുക",
+                    linkedin: "ലിങ്ക്ഡ്ഇൻ"
+                },
+                footer: {
+                    copyright: "© 2025 സേഖ് സുജോൻ ഹഖ്. എല്ലാ അവകാശങ്ങളും നിക്ഷിപ്തം."
+                }
+            },
+            bho: {
+                nav: {
+                    title: "सेख सुजोन हक",
+                    home: "होम",
+                    about: "हमार बारे में",
+                    projects: "प्रोजेक्ट",
+                    skills: "कौशल",
+                    contact: "संपर्क"
+                },
+                home: {
+                    title: "हाय, हम सेख सुजोन हक बानी",
+                    subtitle: "एक कॉस्मिक AI/ML इंजीनियर जे भविष्य खातिर अंतरतारकीय समाधान बनावे ला।",
+                    connect: "आवs जोड़ल जाव"
+                },
+                about: {
+                    title: "हमार बारे में",
+                    bio1: "हम एक महत्वाकांक्षी <strong>AI/ML इंजीनियर</strong> बानी, जेकर पास हार्डवेयर आ सॉफ्टवेयर के एकीकृत करे वाली बुद्धिमान सिस्टम बनावे के व्यावहारिक अनुभव बा—जैसे कि हमार हालिया AI-संचालित कृषि रोबोट। हमार विशेषज्ञता Python, ML, Arduino-IoT, आ Firebase में बा, आ हम तकनीक के सुलभ, टिकाऊ आ प्रभावशाली बनावे के लक्ष्य से प्रेरित बानी।",
+                    bio2: "हम वर्तमान में <strong>लवली प्रोफेशनल यूनिवर्सिटी</strong> से <strong>कंप्यूटर साइंस इंजीनियरिंग में बी.टेक</strong> कर रहल बानी। हम कई नवाचार-प्रेरित प्रोजेक्ट के नेतृत्व कइले बानी, विश्वविद्यालय हैकथॉन में हिस्सा लिहले बानी, आ डेटा साइंस आ कृत्रिम बुद्धिमत्ता के क्षेत्र में आपन ज्ञान बढ़ावत बानी। हमार काम के अन्वेषण करs या LinkedIn पs हमसे जुड़s!",
+                    linkedin: "LinkedIn देखs"
+                },
+                projects: {
+                    title: "हमार प्रोजेक्ट",
+                    list: [
+                        {
+                            title: "AI-संचालित कृषि रोबोट",
+                            description: "एक स्वचालित रोबोट जे AI के उपयोग से पौधा के रोग के पता लगावे ला, पर्यावरणीय डेटा के निगरानी करे ला, आ टिकाऊ खेती खातिर जरूरी कीटनाशक के छिड़काव करे ला।",
+                            link: "दस्तावेजीकरण जल्दी आवे वाला बा"
+                        },
+                        {
+                            title: "वॉयस + बाधा से बचाव वाला रोबोट",
+                            description: "एक वॉयस-नियंत्रित रोबोट जे सेंसर इनपुट आ वॉयस कमांड के उपयोग से स्वायत्त रूप से बाधा से बच सके ला।",
+                            link: "दस्तावेजीकरण जल्दी आवे वाला बा"
+                        },
+                        {
+                            title: "उपस्थिति प्रबंधन सिस्टम",
+                            description: "शैक्षणिक संस्थान खातिर उपस्थिति रिकॉर्ड के कुशलतापूर्वक ट्रैक आ प्रबंधन करे खातिर आसान रिपोर्टिंग सुविधा वाला एक सिस्टम।",
+                            link: "प्रोजेक्ट देखs →"
+                        },
+                        {
+                            title: "पर्यावरण जागरूकता AI टूल",
+                            description: "एक AI-चालित टूल जे उपयोगकर्ता के परागणकर्ता पर प्रदूषण के प्रभाव के बारे में शिक्षित करे ला आ पर्यावरण संरक्षण खातिर उपयोगी सुझाव दे ला।",
+                            link: "प्रोजेक्ट देखs →"
+                        },
+                        {
+                            title: "AI करियर मार्गदर्शन मंच",
+                            description: "एक वेब ऐप जे उपयोगकर्ता के कौशल, प्राथमिकता, आ बाजार रुझान के आधार पs व्यक्तिगत करियर पथ के सिफारिश करे खातिर AI के उपयोग करे ला।",
+                            link: "प्रोजेक्ट देखs →"
+                        },
+                        {
+                            title: "वर्चुअल असिस्टेंट – टॉम",
+                            description: "“टॉम” HTML, CSS, आ JavaScript के साथ बनल एक ब्राउजर-आधारित वर्चुअल असिस्टेंट बा। ई वॉयस कमांड के जवाब दे ला आ वेब स्पीच API के उपयोग से बुनियादी वेब कार्य करे ला।",
+                            link: "प्रोजेक्ट देखs →"
+                        },
+                        {
+                            title: "AI-संचालित मूड ट्रैकर",
+                            description: "एक स्मार्ट मूड ट्रैकिंग वेब ऐप जे उपयोगकर्ता इनपुट के विश्लेषण, भावनात्मक स्वर के पता लगावे, आ व्यक्तिगत प्रतिक्रिया आ प्रेरक उद्धरण प्रदान करे खातिर AI के उपयोग करे ला।",
+                            link: "प्रोजेक्ट देखs →"
+                        },
+                        {
+                            title: "AI चैटबॉट",
+                            description: "JavaScript आ एकीकृत AI APIs के साथ बनल एक बुद्धिमान चैटबॉट जे अर्थपूर्ण जवाब दे ला आ FAQs या वार्तालाप में सहायता करे ला।",
+                            link: "प्रोजेक्ट देखs →"
+                        }
+                    ]
+                },
+                skills: {
+                    title: "कौशल",
+                    list: [
+                        "पायथन",
+                        "सी प्रोग्रामिंग",
+                        "HTML/CSS",
+                        "जावास्क्रिप्ट",
+                        "SQL",
+                        "लिनक्स",
+                        "फायरबेस",
+                        "आर्डुइनो",
+                        "गूगल कोलैब",
+                        "गिट",
+                        "AI/ML (प्रारंभिक)",
+                        "डेटा विज़ुअलाइज़ेशन"
+                    ]
+                },
+                contact: {
+                    title: "संपर्क करs",
+                    subtitle: "असाधारण बनावे के यात्रा शुरू करs। अभी जोड़s!",
+                    name_label: "नाम",
+                    name_placeholder: "तोर नाम",
+                    email_label: "ईमेल",
+                    email_placeholder: "your.email@example.com",
+                    message_label: "संदेश",
+                    message_placeholder: "तोर संदेश",
+                    submit: "संदेश भेजs",
+                    email_me: "हमके ईमेल करs",
+                    linkedin: "लिंक्डइन"
+                },
+                footer: {
+                    copyright: "© 2025 सेख सुजोन हक। सभ अधिकार सुरक्षित बा।"
+                }
+            },
+            as: {
+                nav: {
+                    title: "চেখ চুজন হক",
+                    home: "হোম",
+                    about: "মোৰ বিষয়ে",
+                    projects: "প্ৰকল্প",
+                    skills: "দক্ষতা",
+                    contact: "যোগাযোগ"
+                },
+                home: {
+                    title: "হাই, মই চেখ চুজন হক",
+                    subtitle: "ভৱিষ্যতৰ বাবে আন্তঃনক্ষত্ৰীয় সমাধান সৃষ্টি কৰা এজন কচমিক AI/ML ইঞ্জিনিয়াৰ।",
+                    connect: "আহক সংযোগ কৰোঁ"
+                },
+                about: {
+                    title: "মোৰ বিষয়ে",
+                    bio1: "মই এজন উচ্চাকাংক্ষী <strong>AI/ML ইঞ্জিনিয়াৰ</strong>, যাৰ হাৰ্ডৱেৰ আৰু ছফ্টৱেৰ একত্ৰিত কৰি বুদ্ধিমান চিষ্টেম নিৰ্মাণৰ ব্যৱহাৰিক অভিজ্ঞতা আছে—যেনে মোৰ শেহতীয়া AI-চালিত কৃষি ৰ’বট। মোৰ দক্ষতা Python, ML, Arduino-IoT, আৰু Firebase-ত আছে, আৰু মই প্ৰযুক্তিক সুলভ, টেকসই আৰু প্ৰভাৱশালী কৰাৰ লক্ষ্যৰে পৰিচালিত।",
+                    bio2: "মই বৰ্তমান <strong>লাভলী প্ৰফেচনেল ইউনিভাৰ্চিটি</strong>ৰ পৰা <strong>কম্পিউটাৰ ছায়েন্স ইঞ্জিনিয়াৰিঙত B.Tech</strong> কৰি আছোঁ। মই একাধিক উদ্ভাৱন-চালিত প্ৰকল্পৰ নেতৃত্ব দিছোঁ, বিশ্ববিদ্যালয়ৰ হেকাথনত অংশগ্ৰহণ কৰিছোঁ, আৰু ডাটা ছায়েন্স আৰু কৃত্ৰিম বুদ্ধিমত্তাৰ ক্ষেত্ৰত মোৰ জ্ঞান বৃদ্ধি কৰি আছোঁ। মোৰ কাম অন্বেষণ কৰক বা LinkedIn-ত মোৰ সৈতে সংযোগ কৰক!",
+                    linkedin: "LinkedIn চাওক"
+                },
+                projects: {
+                    title: "মোৰ প্ৰকল্প",
+                    list: [
+                        {
+                            title: "AI-চালিত কৃষি ৰ’বট",
+                            description: "এটা স্বয়ংক্ৰিয় ৰ’বট যিয়ে AI ব্যৱহাৰ কৰি উদ্ভিদৰ ৰোগ ধৰা পেলায়, পৰিৱেশৰ ডাটা নিৰীক্ষণ কৰে, আৰু টেকসই কৃষিৰ বাবে প্ৰয়োজনীয় কীটনাশক স্প্ৰে কৰে।",
+                            link: "দস্তাবেজ শীঘ্ৰেই আহিব"
+                        },
+                        {
+                            title: "ভইচ + বাধা এৰাই চলা ৰ’বট",
+                            description: "এটা ভইচ-নিয়ন্ত্ৰিত ৰ’বট যিয়ে চেন্সৰ ইনপুট আৰু ভইচ কমাণ্ড ব্যৱহাৰ কৰি স্বয়ংক্ৰিয়ভাৱে বাধা এৰাই চলিব পাৰে।",
+                            link: "দস্তাবেজ শীঘ্ৰেই আহিব"
+                        },
+                        {
+                            title: "উপস্থিতি পৰিচালনা চিষ্টেম",
+                            description: "শিক্ষানুষ্ঠানৰ বাবে উপস্থিতিৰ ৰেকৰ্ড দক্ষতাৰে ট্ৰেক আৰু পৰিচালনা কৰাৰ বাবে সহজ ৰিপ’ৰ্টিং বৈশিষ্ট্যৰ সৈতে এটা চিষ্টেম।",
+                            link: "প্ৰকল্প চাওক →"
+                        },
+                        {
+                            title: "পৰিৱেশ সচেতনতা AI সঁজুলি",
+                            description: "এটা AI-চালিত সঁজুলি যিয়ে ব্যৱহাৰকাৰীক পৰাগৰেণুকাৰীৰ ওপৰত প্ৰদূষণৰ প্ৰভাৱৰ বিষয়ে শিক্ষা দিয়ে আৰু পৰিৱেশ সুৰক্ষাৰ বাবে কাৰ্যকৰী পৰামৰ্শ প্ৰদান কৰে।",
+                            link: "প্ৰকল্প চাওক →"
+                        },
+                        {
+                            title: "AI কেৰিয়াৰ গাইডেন্স প্লেটফৰ্ম",
+                            description: "এটা ৱেব এপ যিয়ে ব্যৱহাৰকাৰীৰ দক্ষতা, পছন্দ, আৰু বজাৰৰ ধাৰাৰ ওপৰত ভিত্তি কৰি ব্যক্তিগতকৃত কেৰিয়াৰ পথৰ পৰামৰ্শ দিয়াৰ বাবে AI ব্যৱহাৰ কৰে।",
+                            link: "প্ৰকল্প চাওক →"
+                        },
+                        {
+                            title: "ভাৰ্চুৱেল এচিষ্টেণ্ট – টম",
+                            description: "“টম” HTML, CSS, আৰু JavaScriptৰ সৈতে নিৰ্মিত এটা ব্ৰাউজাৰ-ভিত্তিক ভাৰ্চুৱেল এচিষ্টেণ্ট। ই ভইচ কমাণ্ডৰ উত্তৰ দিয়ে আৰু ৱেব স্পীচ API ব্যৱহাৰ কৰি মৌলিক ৱেব কাম সম্পন্ন কৰে।",
+                            link: "প্ৰকল্প চাওক →"
+                        },
+                        {
+                            title: "AI-চালিত মুড ট্ৰেকাৰ",
+                            description: "এটা স্মাৰ্ট মুড ট্ৰেকিং ৱেব এপ যিয়ে ব্যৱহাৰকাৰীৰ ইনপুট বিশ্লেষণ কৰে, আৱেগিক সুৰ ধৰা পেলায়, আৰু ব্যক্তিগতকৃত ফীডবেক আৰু প্ৰেৰণাদায়ক উদ্ধৃতি প্ৰদান কৰাৰ বাবে AI ব্যৱহাৰ কৰে।",
+                            link: "প্ৰকল্প চাওক →"
+                        },
+                        {
+                            title: "AI চেটবট",
+                            description: "JavaScript আৰু সংযুক্ত AI APIsৰ সৈতে নিৰ্মিত এটা বুদ্ধিমান চেটবট যিয়ে অৰ্থপূৰ্ণ সঁহাৰি দিয়ে আৰু FAQs বা কথোপকথনত সহায় কৰে।",
+                            link: "প্ৰকল্প চাওক →"
+                        }
+                    ]
+                },
+                skills: {
+                    title: "দক্ষতা",
+                    list: [
+                        "পাইথন",
+                        "চি প্ৰ’গ্ৰামিং",
+                        "HTML/CSS",
+                        "জাভাস্ক্ৰিপ্ট",
+                        "SQL",
+                        "লিনাক্স",
+                        "ফায়াৰবেছ",
+                        "আৰ্ডুইনো",
+                        "গুগল ক’লাব",
+                        "গিট",
+                        "AI/ML (প্ৰাৰম্ভিক)",
+                        "ডাটা ভিজুৱেলাইজেচন"
+                    ]
+                },
+                contact: {
+                    title: "যোগাযোগ কৰক",
+                    subtitle: "অসাধাৰণ সৃষ্টিৰ যাত্ৰা আৰম্ভ কৰক। এতিয়াই সংযোগ কৰক!",
+                    name_label: "নাম",
+                    name_placeholder: "আপোনাৰ নাম",
+                    email_label: "ইমেইল",
+                    email_placeholder: "your.email@example.com",
+                    message_label: "বাৰ্তা",
+                    message_placeholder: "আপোনাৰ বাৰ্তা",
+                    submit: "বাৰ্তা পঠিয়াওক",
+                    email_me: "মোক ইমেইল কৰক",
+                    linkedin: "লিংকডইন"
+                },
+                footer: {
+                    copyright: "© ২০২৫ চেখ চুজন হক। সকলো অধিকাৰ সংৰক্ষিত।"
+                }
+            },
+            mr: {
+                nav: {
+                    title: "शेख सुजोन हक",
+                    home: "होम",
+                    about: "माझ्याबद्दल",
+                    projects: "प्रकल्प",
+                    skills: "कौशल्य",
+                    contact: "संपर्क"
+                },
+                home: {
+                    title: "हाय, मी शेख सुजोन हक आहे",
+                    subtitle: "भविष्यासाठी आंतरतारकीय उपाय तयार करणारा एक कॉस्मिक AI/ML इंजिनीअर.",
+                    connect: "चला कनेक्ट करूया"
+                },
+                about: {
+                    title: "माझ्याबद्दल",
+                    bio1: "मी एक महत्त्वाकांक्षी <strong>AI/ML इंजिनीअर</strong> आहे, ज्याला हार्डवेअर आणि सॉफ्टवेअर एकत्रित करणाऱ्या बुद्धिमान प्रणाली तयार करण्याचा प्रत्यक्ष अनुभव आहे—जसे की माझा अलीकडील AI-चालित कृषी रोबोट. माझे कौशल्य Python, ML, Arduino-IoT, आणि Firebase मध्ये आहे, आणि तंत्रज्ञानाला सुलभ, शाश्वत आणि प्रभावी बनवण्याच्या ध्येयाने मी प्रेरित आहे.",
+                    bio2: "मी सध्या <strong>लव्हली प्रोफेशनल युनिव्हर्सिटी</strong> मधून <strong>कॉम्प्युटर सायन्स इंजिनीअरिंगमध्ये B.Tech</strong> करत आहे. मी अनेक नाविन्यपूर्ण प्रकल्पांचे नेतृत्व केले आहे, विद्यापीठ हॅकाथॉन्समध्ये भाग घेतला आहे, आणि डेटा सायन्स आणि कृत्रिम बुद्धिमत्ता क्षेत्रात माझे ज्ञान वाढवत आहे. माझे काम एक्सप्लोर करा किंवा LinkedIn वर माझ्याशी कनेक्ट व्हा!",
+                    linkedin: "LinkedIn पहा"
+                },
+                projects: {
+                    title: "माझे प्रकल्प",
+                    list: [
+                        {
+                            title: "AI-चालित कृषी रोबोट",
+                            description: "AI चा वापर करून वनस्पतींचे रोग ओळखणारा, पर्यावरणीय डेटाचे निरीक्षण करणारा आणि शाश्वत शेतीसाठी आवश्यक कीटकनाशके फवारणारा एक स्वयंचलित रोबोट.",
+                            link: "कागदपत्रे लवकरच येत आहेत"
+                        },
+                        {
+                            title: "व्हॉइस + अडथळा टाळणारा रोबोट",
+                            description: "सेन्सर इनपुट आणि व्हॉइस कमांडचा वापर करून स्वायत्तपणे अडथळे टाळू शकणारा एक व्हॉइस-नियंत्रित रोबोट.",
+                            link: "कागदपत्रे लवकरच येत आहेत"
+                        },
+                        {
+                            title: "हजेरी व्यवस्थापन प्रणाली",
+                            description: "शैक्षणिक संस्थांसाठी हजेरी रेकॉर्ड कार्यक्षमतेने ट्रॅक आणि व्यवस्थापित करण्यासाठी सुलभ अहवाल वैशिष्ट्यांसह एक प्रणाली.",
+                            link: "प्रकल्प पहा →"
+                        },
+                        {
+                            title: "पर्यावरण जागरूकता AI साधन",
+                            description: "वापरकर्त्यांना परागकणांवर प्रदूषणाच्या प्रभावाबद्दल शिक्षित करणारे आणि पर्यावरण संरक्षणासाठी कृतीशील टिप्स सुचवणारे AI-चालित साधन.",
+                            link: "प्रकल्प पहा →"
+                        },
+                        {
+                            title: "AI करिअर मार्गदर्शन व्यासपीठ",
+                            description: "वापरकर्त्याच्या कौशल्यांवर, प्राधान्यांवर आणि बाजारातील ट्रेंडवर आधारित वैयक्तिक करिअर मार्गांची शिफारस करण्यासाठी AI चा वापर करणारा वेब अॅप.",
+                            link: "प्रकल्प पहा →"
+                        },
+                        {
+                            title: "व्हर्च्युअल असिस्टंट – टॉम",
+                            description: "“टॉम” हा HTML, CSS, आणि JavaScript सह बनवलेला ब्राउझर-आधारित व्हर्च्युअल असिस्टंट आहे. तो व्हॉइस कमांडला प्रतिसाद देतो आणि वेब स्पीच API चा वापर करून मूलभूत वेब कार्ये करतो.",
+                            link: "प्रकल्प पहा →"
+                        },
+                        {
+                            title: "AI-चालित मूड ट्रॅकर",
+                            description: "वापरकर्त्याच्या इनपुटचे विश्लेषण करण्यासाठी, भावनिक स्वर ओळखण्यासाठी आणि वैयक्तिक फीडबॅक आणि प्रेरणादायी कोट्स प्रदान करण्यासाठी AI चा वापर करणारा स्मार्ट मूड ट्रॅकिंग वेब अॅप.",
+                            link: "प्रकल्प पहा →"
+                        },
+                        {
+                            title: "AI चॅटबॉट",
+                            description: "JavaScript आणि एकीकृत AI APIs सह बनवलेला एक बुद्धिमान चॅटबॉट जो अर्थपूर्ण प्रतिसाद देतो आणि FAQs किंवा संभाषणांना सहाय्य करतो.",
+                            link: "प्रकल्प पहा →"
+                        }
+                    ]
+                },
+                skills: {
+                    title: "कौशल्य",
+                    list: [
+                        "पायथन",
+                        "सी प्रोग्रामिंग",
+                        "HTML/CSS",
+                        "जावास्क्रिप्ट",
+                        "SQL",
+                        "लिनक्स",
+                        "फायरबेस",
+                        "आर्डुइनो",
+                        "गूगल कोलॅब",
+                        "गिट",
+                        "AI/ML (प्रारंभिक)",
+                        "डेटा व्हिज्युअलायझेशन"
+                    ]
+                },
+                contact: {
+                    title: "संपर्क साधा",
+                    subtitle: "असाधारण तयार करण्याचा प्रवास सुरू करा. आता कनेक्ट व्हा!",
+                    name_label: "नाव",
+                    name_placeholder: "तुझे नाव",
+                    email_label: "ईमेल",
+                    email_placeholder: "your.email@example.com",
+                    message_label: "संदेश",
+                    message_placeholder: "तुझा संदेश",
+                    submit: "संदेश पाठवा",
+                    email_me: "मला ईमेल करा",
+                    linkedin: "लिंक्डइन"
+                },
+                footer: {
+                    copyright: "© 2025 शेख सुजोन हक. सर्व हक्क राखीव."
+                }
+            },
+            pa: {
+                nav: {
+                    title: "ਸੇਖ ਸੁਜੋਨ ਹਕ",
+                    home: "ਹੋਮ",
+                    about: "ਮੇਰੇ ਬਾਰੇ",
+                    projects: "ਪ੍ਰੋਜੈਕਟ",
+                    skills: "ਹੁਨਰ",
+                    contact: "ਸੰਪਰਕ"
+                },
+                home: {
+                    title: "ਹਾਇ, ਮੈਂ ਸੇਖ ਸੁਜੋਨ ਹਕ ਹਾਂ",
+                    subtitle: "ਇੱਕ ਕੌਸਮਿਕ AI/ML ਇੰਜਨੀਅਰ ਜੋ ਭਵਿੱਖ ਲਈ ਅੰਤਰ-ਤਾਰੀ ਹੱਲ ਬਣਾਉਂਦਾ ਹੈ।",
+                    connect: "ਆਓ ਜੁੜੀਏ"
+                },
+                about: {
+                    title: "ਮੇਰੇ ਬਾਰੇ",
+                    bio1: "ਮੈਂ ਇੱਕ ਮਹੱਤਵਾਕਾਂਕਸ਼ੀ <strong>AI/ML ਇੰਜਨੀਅਰ</strong> ਹਾਂ, ਜਿਸ ਕੋਲ ਹਾਰਡਵੇਅਰ ਅਤੇ ਸੌਫਟਵੇਅਰ ਨੂੰ ਜੋੜ ਕੇ ਬੁੱਧੀਮਾਨ ਸਿਸਟਮ ਬਣਾਉਣ ਦਾ ਵਿਹਾਰਕ ਅਨੁਭਵ ਹੈ—ਜਿਵੇਂ ਕਿ ਮੇਰਾ ਹਾਲੀਆ AI-ਸੰਚਾਲਿਤ ਖੇਤੀਬਾੜੀ ਰੋਬੋਟ। ਮੇਰੀ ਮੁਹਾਰਤ Python, ML, Arduino-IoT, ਅਤੇ Firebase ਵਿੱਚ ਹੈ, ਅਤੇ ਮੈਂ ਤਕਨੀਕ ਨੂੰ ਪਹੁੰਚਯੋਗ, ਸਥਿਰ ਅਤੇ ਪ੍ਰਭਾਵਸ਼ਾਲੀ ਬਣਾਉਣ ਦੇ ਟੀਚੇ ਨਾਲ ਪ੍ਰੇਰਿਤ ਹਾਂ।",
+                    bio2: "ਮੈਂ ਵਰਤਮਾਨ ਵਿੱਚ <strong>ਲਵਲੀ ਪ੍ਰੋਫੈਸ਼ਨਲ ਯੂਨੀਵਰਸਿਟੀ</strong> ਤੋਂ <strong>ਕੰਪਿਊਟਰ ਸਾਇੰਸ ਇੰਜਨੀਅਰਿੰਗ ਵਿੱਚ B.Tech</strong> ਕਰ ਰਿਹਾ ਹਾਂ। ਮੈਂ ਕਈ ਨਵੀਨਤਾ-ਸੰਚਾਲਿਤ ਪ੍ਰੋਜੈਕਟਾਂ ਦੀ ਅਗਵਾਈ ਕੀਤੀ ਹੈ, ਯੂਨੀਵਰਸਿਟੀ ਹੈਕਾਥੌਨਸ ਵਿੱਚ ਹਿੱਸਾ ਲਿਆ ਹੈ, ਅਤੇ ਡੇਟਾ ਸਾਇੰਸ ਅਤੇ ਕ੍ਰਿਤਰਿਮ ਬੁੱਧੀ ਦੇ ਖੇਤਰ ਵਿੱਚ ਆਪਣੇ ਗਿਆਨ ਨੂੰ ਵਧਾ ਰਿਹਾ ਹਾਂ। ਮੇਰੇ ਕੰਮ ਦੀ ਪੜਚੋਲ ਕਰੋ ਜਾਂ LinkedIn 'ਤੇ ਮੇਰੇ ਨਾਲ ਜੁੜੋ!",
+                    linkedin: "LinkedIn ਵੇਖੋ"
+                },
+                projects: {
+                    title: "ਮੇਰੇ ਪ੍ਰੋਜੈਕਟ",
+                    list: [
+                        {
+                            title: "AI-ਸੰਚਾਲਿਤ ਖੇਤੀਬਾੜੀ ਰੋਬੋਟ",
+                            description: "ਇੱਕ ਸਵੈਚਾਲਿਤ ਰੋਬੋਟ ਜੋ AI ਦੀ ਵਰਤੋਂ ਕਰਕੇ ਪੌਦਿਆਂ ਦੀਆਂ ਬਿਮਾਰੀਆਂ ਦਾ ਪਤਾ ਲਗਾਉਂਦਾ ਹੈ, ਵਾਤਾਵਰਣ ਸੰਬੰਧੀ ਡੇਟਾ ਦੀ ਨਿਗਰਾਨੀ ਕਰਦਾ ਹੈ, ਅਤੇ ਸਥਿਰ ਖੇਤੀਬਾੜੀ ਲਈ ਲੋੜੀਂਦੇ ਕੀਟਨਾਸ਼ਕਾਂ ਦਾ ਛਿੜਕਾਅ ਕਰਦਾ ਹੈ।",
+                            link: "ਦਸਤਾਵੇਜ਼ ਜਲਦੀ ਆ ਰਹੇ ਹਨ"
+                        },
+                        {
+                            title: "ਵੌਇਸ + ਰੁਕਾਵਟ ਤੋਂ ਬਚਣ ਵਾਲਾ ਰੋਬੋਟ",
+                            description: "ਇੱਕ ਵੌਇਸ-ਨਿਯੰਤਰਿਤ ਰੋਬੋਟ ਜੋ ਸੈਂਸਰ ਇਨਪੁਟਸ ਅਤੇ ਵੌਇਸ ਕਮਾਂਡਸ ਦੀ ਵਰਤੋਂ ਕਰਕੇ ਸਵੈਚਾਲਿਤ ਤੌਰ 'ਤੇ ਰੁਕਾਵਟਾਂ ਤੋਂ ਬਚ ਸਕਦਾ ਹੈ।",
+                            link: "ਦਸਤਾਵੇਜ਼ ਜਲਦੀ ਆ ਰਹੇ ਹਨ"
+                        },
+                        {
+                            title: "ਹਾਜ਼ਰੀ ਪ੍ਰਬੰਧਨ ਸਿਸਟਮ",
+                            description: "ਸਿੱਖਿਆ ਸੰਸਥਾਵਾਂ ਲਈ ਹਾਜ਼ਰੀ ਰਿਕਾਰਡ ਨੂੰ ਕੁਸ਼ਲਤਾ ਨਾਲ ਟਰੈਕ ਅਤੇ ਪ੍ਰਬੰਧਿਤ ਕਰਨ ਲਈ ਸੌਖੀ ਰਿਪੋਰਟਿੰਗ ਵਿਸ਼ੇਸ਼ਤਾਵਾਂ ਵਾਲਾ ਇੱਕ ਸਿਸਟਮ।",
+                            link: "ਪ੍ਰੋਜੈਕਟ ਵੇਖੋ →"
+                        },
+                        {
+                            title: "ਵਾਤਾਵਰਣ ਜਾਗਰੂਕਤਾ AI ਟੂਲ",
+                            description: "ਇੱਕ AI-ਸੰਚਾਲਿਤ ਟੂਲ ਜੋ ਉਪਭੋਗਤਾਵਾਂ ਨੂੰ ਪਰਾਗਕਣਕਰਤਾਵਾਂ 'ਤੇ ਪ੍ਰਦੂਸ਼ਣ ਦੇ ਪ੍ਰਭਾਵ ਬਾਰੇ ਸਿੱਖਿਅਤ ਕਰਦਾ ਹੈ ਅਤੇ ਵਾਤਾਵਰਣ ਸੁਰੱਖਿਆ ਲਈ ਕਾਰਜਸ਼ੀਲ ਸੁਝਾਅ ਦਿੰਦਾ ਹੈ।",
+                            link: "ਪ੍ਰੋਜੈਕਟ ਵੇਖੋ →"
+                        },
+                        {
+                            title: "AI ਕਰੀਅਰ ਗਾਈਡੈਂਸ ਪਲੇਟਫਾਰਮ",
+                            description: "ਇੱਕ ਵੈਬ ਐਪ ਜੋ ਉਪਭੋਗਤਾ ਦੇ ਹੁਨਰ, ਤਰਜੀਹਾਂ ਅਤੇ ਮਾਰਕੀਟ ਰੁਝਾਨਾਂ ਦੇ ਆਧਾਰ 'ਤੇ ਵਿਅਕਤੀਗਤ ਕਰੀਅਰ ਮਾਰਗਾਂ ਦੀ ਸਿਫਾਰਸ਼ ਕਰਨ ਲਈ AI ਦੀ ਵਰਤੋਂ ਕਰਦਾ ਹੈ।",
+                            link: "ਪ੍ਰੋਜੈਕਟ ਵੇਖੋ →"
+                        },
+                        {
+                            title: "ਵਰਚੁਅਲ ਅਸਿਸਟੈਂਟ – ਟੌਮ",
+                            description: "“ਟੌਮ” HTML, CSS, ਅਤੇ JavaScript ਨਾਲ ਬਣਿਆ ਇੱਕ ਬ੍ਰਾਊਜ਼ਰ-ਅਧਾਰਿਤ ਵਰਚੁਅਲ ਅਸਿਸਟੈਂਟ ਹੈ। ਇਹ ਵੌਇਸ ਕਮਾਂਡਸ ਦਾ ਜਵਾਬ ਦਿੰਦਾ ਹੈ ਅਤੇ ਵੈਬ ਸਪੀਚ API ਦੀ ਵਰਤੋਂ ਕਰਕੇ ਮੁੱਢਲੇ ਵੈਬ ਕੰਮ ਕਰਦਾ ਹੈ।",
+                            link: "ਪ੍ਰੋਜੈਕਟ ਵੇਖੋ →"
+                        },
+                        {
+                            title: "AI-ਸੰਚਾਲਿਤ ਮੂਡ ਟਰੈਕਰ",
+                            description: "ਇੱਕ ਸਮਾਰਟ ਮੂਡ ਟਰੈਕਿੰਗ ਵੈਬ ਐਪ ਜੋ ਉਪਭੋਗਤਾ ਇਨਪੁਟਸ ਦਾ ਵਿਸ਼ਲੇਸ਼ਣ ਕਰਨ, ਭਾਵਨਾਤਮਕ ਸੁਰ ਨੂੰ ਖੋਜਣ, ਅਤੇ ਵਿਅਕਤੀਗਤ ਫੀਡਬੈਕ ਅਤੇ ਪ੍ਰੇਰਣਾਦਾਇਕ ਹਵਾਲੇ ਪ੍ਰਦਾਨ ਕਰਨ ਲਈ AI ਦੀ ਵਰਤੋਂ ਕਰਦਾ ਹੈ।",
+                            link: "ਪ੍ਰੋਜੈਕਟ ਵੇਖੋ →"
+                        },
+                        {
+                            title: "AI ਚੈਟਬੋਟ",
+                            description: "JavaScript ਅਤੇ ਏਕੀਕ੍ਰਿਤ AI APIs ਨਾਲ ਬਣਿਆ ਇੱਕ ਬੁੱਧੀਮਾਨ ਚੈਟਬੋਟ ਜੋ ਅਰਥਪੂਰਨ ਜਵਾਬ ਦਿੰਦਾ ਹੈ ਅਤੇ FAQs ਜਾਂ ਗੱਲਬਾਤ ਵਿੱਚ ਸਹਾਇਤਾ ਕਰਦਾ ਹੈ।",
+                            link: "ਪ੍ਰੋਜੈਕਟ ਵੇਖੋ →"
+                        }
+                    ]
+                },
+                skills: {
+                    title: "ਹੁਨਰ",
+                    list: [
+                        "ਪਾਈਥਨ",
+                        "ਸੀ ਪ੍ਰੋਗਰਾਮਿੰਗ",
+                        "HTML/CSS",
+                        "ਜਾਵਾਸਕ੍ਰਿਪਟ",
+                        "SQL",
+                        "ਲੀਨਕਸ",
+                        "ਫਾਇਰਬੇਸ",
+                        "ਆਰਡੁਇਨੋ",
+                        "ਗੂਗਲ ਕੋਲੈਬ",
+                        "ਗਿਟ",
+                        "AI/ML (ਸ਼ੁਰੂਆਤੀ)",
+                        "ਡੇਟਾ ਵਿਜ਼ੂਅਲਾਈਜ਼ੇਸ਼ਨ"
+                    ]
+                },
+                contact: {
+                    title: "ਸੰਪਰਕ ਕਰੋ",
+                    subtitle: "ਅਸਾਧਾਰਨ ਬਣਾਉਣ ਦੀ ਯਾਤਰਾ ਸ਼ੁਰੂ ਕਰੋ। ਹੁਣੇ ਜੁੜੋ!",
+                    name_label: "ਨਾਮ",
+                    name_placeholder: "ਤੁਹਾਡਾ ਨਾਮ",
+                    email_label: "ਈਮੇਲ",
+                    email_placeholder: "your.email@example.com",
+                    message_label: "ਸੁਨੇਹਾ",
+                    message_placeholder: "ਤੁਹਾਡਾ ਸੁਨੇਹਾ",
+                    submit: "ਸੁਨੇਹਾ ਭੇਜੋ",
+                    email_me: "ਮੈਨੂੰ ਈਮੇਲ ਕਰੋ",
+                    linkedin: "ਲਿੰਕਡਇਨ"
+                },
+                footer: {
+                    copyright: "© 2025 ਸੇਖ ਸੁਜੋਨ ਹਕ। ਸਾਰੇ ਅਧਿਕਾਰ ਰਾਖਵੇਂ।"
+                }
+            }
+        };
+
+        // Language Switcher Logic
+        function updateContent(lang) {
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                const keys = key.split('.');
+                let value = translations[lang];
+                for (let k of keys) {
+                    if (k.includes('[')) {
+                        const [arrayKey, index] = k.split(/[\[\]]/);
+                        value = value[arrayKey][parseInt(index)];
+                    } else {
+                        value = value[k];
+                    }
+                }
+                element.innerHTML = value;
+            });
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+                const key = element.getAttribute('data-i18n-placeholder');
+                const keys = key.split('.');
+                let value = translations[lang];
+                for (let k of keys) {
+                    value = value[k];
+                }
+                element.placeholder = value;
+            });
+        }
+
+        const languageSwitcher = document.getElementById('language-switcher');
+        const mobileLanguageSwitcher = document.getElementById('language-switcher-mobile');
+        languageSwitcher.addEventListener('change', (e) => {
+            updateContent(e.target.value);
+            mobileLanguageSwitcher.value = e.target.value;
+        });
+        mobileLanguageSwitcher.addEventListener('change', (e) => {
+            updateContent(e.target.value);
+            languageSwitcher.value = e.target.value;
+        });
+
+        // Initialize with English
+        updateContent('en');
+
+        // Three.js Background
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('three-canvas'), alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        const geometry = new THREE.BufferGeometry();
+        const vertices = [];
+        for (let i = 0; i < 10000; i++) {
+            vertices.push(THREE.MathUtils.randFloatSpread(2000));
+            vertices.push(THREE.MathUtils.randFloatSpread(2000));
+            vertices.push(THREE.MathUtils.randFloatSpread(2000));
+        }
+        geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+        const material = new THREE.PointsMaterial({ color: 0x22D3EE, size: 2 });
+        const points = new THREE.Points(geometry, material);
+        scene.add(points);
+        camera.position.z = 500;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            points.rotation.x += 0.0002;
+            points.rotation.y += 0.0002;
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        window.addEventListener('resize', () => {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+        });
+
+        // Scroll Effects
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            nav.classList.toggle('scrolled', window.scrollY > 50);
+
+            document.querySelectorAll('.fade-in').forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top <= window.innerHeight * 0.8) {
+                    el.classList.add('visible');
+                }
+            });
+
+            const sections = ['home', 'about', 'projects', 'skills', 'contact'];
+            let current = '';
+            for (const section of sections) {
+                const element = document.getElementById(section);
+                if (element.getBoundingClientRect().top <= 100) {
+                    current = section;
+                }
+            }
+            document.querySelectorAll('.nav-glow').forEach(link => {
+                link.classList.toggle('active', link.getAttribute('href') === `#${current}`);
+            });
+        });
+
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Hover Sound
+        const hoverSoundElements = document.querySelectorAll('.hover-sound');
+        hoverSoundElements.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                const audio = new Audio('https://cdn.pixabay.com/audio/2023/09/25/14-36-37-744_200x200.mp3');
+                audio.play();
+            });
+        });
+
+        // Form Submission Feedback
+        const form = document.querySelector('form');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(form);
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                if (result.success) {
+                    alert(translations[languageSwitcher.value].contact.success || 'Message sent successfully!');
+                    form.reset();
+                } else {
+                    alert(translations[languageSwitcher.value].contact.error || 'Failed to send message. Please try again.');
+                }
+            } catch (error) {
+                alert(translations[languageSwitcher.value].contact.error || 'An error occurred. Please try again.');
+            }
+        });
+    </script>
+</body>
+</html>
